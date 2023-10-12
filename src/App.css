@@ -1,18 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Quicksand&display=swap");
 
-*{
+* {
   box-sizing: border-box;
-  font-family: 'Quicksand', Arial, Helvetica, sans-serif;
+  font-family: "Quicksand", Arial, Helvetica, sans-serif;
 }
-body{
-  padding:0;
-  margin:0;
+body {
+  padding: 0;
+  margin: 0;
 }
-.App{
+.App {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: black;
-  color:white;
-  margin-top:10px;
+  background-color: #0d263c;
+    background-image: linear-gradient(
+    140deg,
+    #bfd641 0%,
+    #bc70a4 50%,
+    #0ba2d7 95%
+  );
+  color: white;
+  margin-top: 10px;
 }

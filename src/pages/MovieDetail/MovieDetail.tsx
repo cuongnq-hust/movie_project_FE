@@ -4,6 +4,8 @@ import "./MovieDetail.scss";
 import { URL_BE } from "../../constant/constant";
 import { authHeader } from "../../auth";
 import api from "../../components/api/axiosConfig";
+import Button from "react-bootstrap/Button";
+import { Link, useNavigate } from "react-router-dom";
 
 const MovieDetail = () => {
   const { id } = useParams();
@@ -69,6 +71,7 @@ const MovieDetail = () => {
       alert("Ban can Dang nhap de them binh luan");
     }
   };
+  const navigate = useNavigate();
 
   return (
     <div className="grid-container">
@@ -80,11 +83,22 @@ const MovieDetail = () => {
       <div className="review-list">
         <div>
           <h1>Review List</h1>
-          {reviews.map((review: any) => (
-            <div key={review.id}>
-              <p>{review.body}</p>
-            </div>
-          ))}
+          <div className="review__list">
+            {reviews.map((review: any) => (
+              <div className="review__item" key={review.id}>
+                <p>{review.body}</p>
+                <Button
+                  onClick={() => {
+                    navigate(`/review-detail?id=${review?.id}`);
+                  }}
+                  variant="primary"
+                  type="submit"
+                >
+                  Detail
+                </Button>
+              </div>
+            ))}
+          </div>
         </div>
         <div className="review-form">
           <h2>Submit Review</h2>
