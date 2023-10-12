@@ -12,6 +12,7 @@ const Trailer = () => {
     <div className="react-player-container">
       {key != null ? (
         <ReactPlayer
+          //@ts-ignore
           controls="true"
           playing={true}
           url={`https://www.youtube.com/watch?v=${key}`}

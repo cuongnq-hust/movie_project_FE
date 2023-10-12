@@ -1,4 +1,4 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faVideoSlash } from "@fortawesome/free-solid-svg-icons";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
@@ -8,7 +8,7 @@ import { NavLink } from "react-router-dom";
 import React, { useState } from "react";
 import api from "../api/axiosConfig";
 import Modal from "react-bootstrap/Modal";
-import { URLMOVIE } from "../../constant/constant";
+import { URL_BE } from "../../constant/constant";
 
 const Header = () => {
   const [showLoginForm, setShowLoginForm] = useState(false);
@@ -30,7 +30,7 @@ const Header = () => {
   };
   const handleLogin = async () => {
     try {
-      const response = await api.post(`${URLMOVIE}/auth/login`, {
+      const response = await api.post(`${URL_BE}/auth/login`, {
         email: email,
         password: password,
       });
@@ -75,7 +75,7 @@ const Header = () => {
   };
   const handleRegister = async () => {
     try {
-      const response = await api.post(`${URLMOVIE}/auth/register`, {
+      const response = await api.post(`${URL_BE}/auth/register`, {
         user_name: userName,
         email: emailRegister,
         mobile_number: mobileNumber,
@@ -93,8 +93,8 @@ const Header = () => {
     <Navbar bg="dark" variant="dark" expand="lg">
       <Container fluid>
         <Navbar.Brand href="/" style={{ color: "gold" }}>
-          <FontAwesomeIcon icon={faVideoSlash} />
-          Gold
+{/*           <FontAwesomeIcon icon={faVideoSlash} />
+ */}          Gold
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
