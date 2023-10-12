@@ -1,0 +1,63 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  .movie-details {
+    padding: 20px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  }
+  
+  .movie-details h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .movie-details h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .movie-details img {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    margin-bottom: 10px;
+  }
+  
+  .review-list {
+    padding: 20px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  }
+  
+  .review-list h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .review-list p {
+    margin-bottom: 5px;
+  }
+  .review-form {
+    padding: 20px;
+    margin-top: 20px;
+  }
+  
+  .review-form h2 {
+    font-size: 18px;
+  }
+  
+  .review-form textarea {
+    width: 100%;
+    height: 100px;
+    margin-bottom: 10px;
+    padding: 5px;
+  }
+  
+  .review-form button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    border: none;
+    cursor: pointer;
+  }
