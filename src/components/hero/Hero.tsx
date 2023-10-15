@@ -64,10 +64,15 @@ const Hero = () => {
       console.error(error);
     }
   };
-
+  let classes = {
+    carousel: {
+      height: 200,
+      width: 200,
+    },
+  };
   return (
     <div className="movie-carousel-container">
-      <Carousel>
+      <Carousel className="my-carousel">
         {movies?.map((movie: any) => {
           return (
             <Paper key={movie.id}>
@@ -111,18 +116,6 @@ const Hero = () => {
           );
         })}
       </Carousel>
-
-      {localStorage.getItem("access_token") ? (
-        <div>
-          <form onSubmit={handleSubmit}>
-            <input type="text" value={title} onChange={handleTitleChange} />
-            <input type="file" onChange={handleImageChange} />
-            <button type="submit">Submit</button>
-          </form>
-        </div>
-      ) : (
-        <h1>Ban Can Dang Nhap</h1>
-      )}
     </div>
   );
 };

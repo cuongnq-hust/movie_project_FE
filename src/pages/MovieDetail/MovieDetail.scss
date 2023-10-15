@@ -72,3 +72,22 @@
     justify-content: space-between;
   }
 }
+.movie__title {
+  font-size: 24px;
+  line-height: 28px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.movie__poster {
+  width: 600px;
+  height: 400px;
+  min-width: 600px;
+  min-height: 400px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center center;
+  object-fit: cover;
+}

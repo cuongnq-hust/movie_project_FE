@@ -11,7 +11,6 @@ import { URL_BE } from "../../utils/constants";
 import { useDispatch } from "react-redux";
 import { openToast } from "../../store/storeComponent/customDialog/toastSlice";
 import Modal from "react-bootstrap/Modal";
-import { faLeaf } from "@fortawesome/free-solid-svg-icons";
 
 const ReviewDetail = () => {
   const dispatch = useDispatch();
@@ -142,7 +141,7 @@ const ReviewDetail = () => {
       if (response?.status === 200) {
         getReviewById();
         setshowUpdateReview(false);
-        navigate(-1)
+        navigate(-1);
         dispatch(
           openToast({
             isOpen: Date.now(),
@@ -201,7 +200,7 @@ const ReviewDetail = () => {
               onClick={() => {
                 updateReview(reviewItem?.id);
               }}
-              variant="primary"
+              variant="warning"
               type="submit"
             >
               Update
@@ -234,11 +233,12 @@ const ReviewDetail = () => {
             }
           }}
         ></textarea>
-        <button onClick={submitComment}>Submit</button>
+        <Button onClick={submitComment}>Submit</Button>
       </div>
       {userInfo?.email === reviewItem?.user?.user_id ? (
         <div className="actions">
           <Button
+            variant="warning"
             onClick={() => {
               setshowUpdateReview(!showUpdateReview);
             }}
@@ -246,6 +246,7 @@ const ReviewDetail = () => {
             Update Review
           </Button>
           <Button
+            variant="danger"
             onClick={() => {
               deleteReview(reviewItem?.id);
             }}
@@ -366,7 +367,7 @@ const CommentDetail = ({ commentItem, getCommentByReview }: any) => {
               onClick={() => {
                 updateComment(commentItem?.id);
               }}
-              variant="primary"
+              variant="warning"
               type="submit"
             >
               Update
@@ -377,6 +378,7 @@ const CommentDetail = ({ commentItem, getCommentByReview }: any) => {
       <div className="title">{commentItem?.body}</div>
       <div className="actions">
         <Button
+          variant="warning"
           onClick={() => {
             setshowUpdateCom(!showUpdateCom);
           }}
@@ -384,6 +386,7 @@ const CommentDetail = ({ commentItem, getCommentByReview }: any) => {
           Update Comment
         </Button>
         <Button
+          variant="danger"
           onClick={() => {
             deleteComment(commentItem?.id);
           }}
