@@ -12,9 +12,11 @@ import { authHeader } from "../../auth";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserInfo } from "../../store/storeComponent/auth/authSlice";
 import { URL_BE } from "../../utils/constants";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [email, setEmail] = useState("");
@@ -112,128 +114,70 @@ const Header = () => {
     }
   };
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
-      <Container fluid>
-        <Navbar.Brand href="/" style={{ color: "gold" }}>
-          {/*           <FontAwesomeIcon icon={faVideoSlash} />
-           */}{" "}
-          Gold
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="navbarScroll" />
-        <Navbar.Collapse id="navbarScroll">
-          <Nav
-            className="me-auto my-2 my-lg-0"
-            style={{ maxHeight: "100px" }}
-            navbarScroll
-          >
-            <NavLink className="nav-link" to="/">
-              Home
-            </NavLink>
-            <NavLink className="nav-link" to="/watchList">
-              Watch List
-            </NavLink>
-          </Nav>
-          {access_token ? (
+    <div id="menu">
+      <Modal show={showLoginForm} onHide={handleCloseLoginForm}>
+        <Modal.Header closeButton>
+          <Modal.Title>Đăng nhập</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div>
             <div>
-              <a href="">Xin chao {usernamed}</a>
-              <Button variant="outline-info" onClick={handleLogout}>
-                Đăng xuất
-              </Button>
+              <label>Email:</label>
+              <input type="email" value={email} onChange={handleEmailChange} />
             </div>
-          ) : (
-            <>
-              <Button
-                variant="outline-info"
-                className="me-2"
-                onClick={handleLoginClick}
-              >
-                Đăng nhập
-              </Button>
-              <Button variant="outline-info" onClick={handleRegisterClick}>
-                Đăng ký
-              </Button>
-              <Modal show={showRegisterForm} onHide={handleCloseRegisterForm}>
-                <Modal.Header closeButton>
-                  <Modal.Title>Đăng Ký</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <div>
-                    <div>
-                      <label>User name:</label>
-                      <input
-                        type="text"
-                        value={userName}
-                        onChange={handleUsernameChange}
-                      />
-                    </div>
-                    <div>
-                      <label>Email:</label>
-                      <input
-                        type="email"
-                        value={emailRegister}
-                        onChange={handleEmailRegister}
-                      />
-                    </div>
-                    <div>
-                      <label>Mobile Number</label>
-                      <input
-                        type="text"
-                        value={mobileNumber}
-                        onChange={handleMobileNumber}
-                      />
-                    </div>
-                    <div>
-                      <label>Mật khẩu:</label>
-                      <input
-                        type="password"
-                        value={passwordRegister}
-                        onChange={handlePasswordRegister}
-                      />
-                    </div>
-                    <Button
-                      onClick={handleRegister}
-                      variant="primary"
-                      type="submit"
-                    >
-                      Đăng Ký
-                    </Button>
-                  </div>
-                </Modal.Body>
-              </Modal>
-            </>
-          )}
+            <div>
+              <label>Mật khẩu:</label>
+              <input
+                type="password"
+                value={password}
+                onChange={handlePasswordChange}
+              />
+            </div>
+            <Button onClick={handleLogin} variant="warning" type="submit">
+              Đăng nhập
+            </Button>
+          </div>
+        </Modal.Body>
+      </Modal>
+      <div className="menu__item clothes__list--show">
+        {access_token ? (
+          <div>
+            <a href="">Xin chao {usernamed}</a>
+            <Button variant="outline-info" onClick={handleLogout}>
+              Đăng xuất
+            </Button>
+          </div>
+        ) : (
+          <>
+            <Button
+              variant="outline-info"
+              className="me-2"
+              onClick={handleLoginClick}
+            >
+              Đăng nhập
+            </Button>
+            <Button variant="outline-info" onClick={handleRegisterClick}>
+              Đăng ký
+            </Button>
+          </>
+        )}
+      </div>
 
-          <Modal show={showLoginForm} onHide={handleCloseLoginForm}>
-            <Modal.Header closeButton>
-              <Modal.Title>Đăng nhập</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <div>
-                <div>
-                  <label>Email:</label>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={handleEmailChange}
-                  />
-                </div>
-                <div>
-                  <label>Mật khẩu:</label>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={handlePasswordChange}
-                  />
-                </div>
-                <Button onClick={handleLogin} variant="primary" type="submit">
-                  Đăng nhập
-                </Button>
-              </div>
-            </Modal.Body>
-          </Modal>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+      <div
+        onClick={() => {
+          navigate("/category-list");
+        }}
+        className="menu__item word__list--show"
+      >
+        category
+      </div>
+
+      <div className="menu__item man__list--show">radio</div>
+
+      <div className="menu__item bizz__list--show">#zingchart</div>
+
+      <div className="menu__item watch__list--show">theo dõi</div>
+    </div>
   );
 };
 

@@ -9,6 +9,7 @@ body {
   margin: 0;
 }
 .App {
+  overflow: hidden;
   margin-left: auto;
   margin-right: auto;
   max-width: 1440px;
@@ -17,12 +18,13 @@ body {
   flex-direction: column;
   min-height: 100vh;
   background-color: #0d263c;
-  background-image: linear-gradient(
+  /* background-image: linear-gradient(
     140deg,
     #bfd641 0%,
     #bc70a4 50%,
     #0ba2d7 95%
-  );
+  ); */
+  background-image: linear-gradient(180deg, #294162, #294162);
   color: white;
   margin-top: 10px;
 }
@@ -31,4 +33,60 @@ body {
   font-size: 20px;
   line-height: 24px;
   font-weight: 600;
+}
+.nav-link {
+  letter-spacing: 2px;
+  font-size: 24px;
+  line-height: 28px;
+  font-weight: 900;
+  text-shadow: 0 0 10px red, 0 0 20px red, 0 0 40px red, 0 0 80px red,
+    0 0 120px red;
+}
+#menu {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #2cc8e5;
+  -webkit-box-shadow: 0 0 10px #00b3ff, 0 0 20px #00b3ff, 0 0 40px #00b3ff,
+    0 0 80px #00b3ff, 0 0 120px #00b3ff;
+  box-shadow: 0 0 10px #00b3ff, 0 0 20px #00b3ff, 0 0 40px #00b3ff,
+    0 0 80px #00b3ff, 0 0 120px #00b3ff;
+  color: #ffffff;
+}
+#menu .menu__item {
+  letter-spacing: 1px;
+  font-size: 2.4rem;
+  line-height: 3rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  color: #ffffff;
+  border-radius: 2px;
+  cursor: pointer;
+  position: relative;
+  z-index: 10;
+}
+.btn.btn-primary {
+  -webkit-box-shadow: 0 0 10px #00b3ff, 0 0 20px #00b3ff, 0 0 40px #00b3ff,
+    0 0 80px #00b3ff;
+  box-shadow: 0 0 10px #00b3ff, 0 0 20px #00b3ff, 0 0 40px #00b3ff,
+    0 0 80px #00b3ff;
+}
+
+.btn.btn-danger {
+  -webkit-box-shadow: 0 0 10px pink, 0 0 20px pink, 0 0 40px pink,
+    0 0 80px pink;
+  box-shadow: 0 0 10px pink, 0 0 20px pink, 0 0 40px pink, 0 0 80px pink;
+}
+.btn.btn-warning {
+  -webkit-box-shadow: 0 0 10px greenyellow, 0 0 20px greenyellow,
+    0 0 40px greenyellow, 0 0 80px greenyellow;
+  box-shadow: 0 0 10px greenyellow, 0 0 20px greenyellow, 0 0 40px greenyellow,
+    0 0 80px greenyellow;
 }
