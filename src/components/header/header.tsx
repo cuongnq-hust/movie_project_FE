@@ -5,21 +5,43 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { NavLink } from "react-router-dom";
-import React, { useState } from "react";
 import api from "../api/axiosConfig";
 import Modal from "react-bootstrap/Modal";
-import { URL_BE } from "../../constant/constant";
+import React, { useEffect, useState } from "react";
+import { authHeader } from "../../auth";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserInfo } from "../../store/storeComponent/auth/authSlice";
+import { URL_BE } from "../../utils/constants";
 
 const Header = () => {
+  const dispatch = useDispatch();
+
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleEmailChange = (event) => {
+  const getUser = async () => {
+    try {
+      const response = await api.get(`${URL_BE}/auth/user`, {
+        headers: authHeader(),
+      });
+      if (response?.data) {
+        dispatch(setUserInfo({ ...response?.data }));
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
+  const handleEmailChange = (event: any) => {
     setEmail(event.target.value);
   };
 
-  const handlePasswordChange = (event) => {
+  const handlePasswordChange = (event: any) => {
     setPassword(event.target.value);
   };
   const handleLoginClick = () => {
@@ -55,16 +77,16 @@ const Header = () => {
   const [mobileNumber, setMobileNumber] = useState("");
   const [passwordRegister, setPasswordRegister] = useState("");
   const [showRegisterForm, setShowRegisterForm] = useState(false);
-  const handleUsernameChange = (event) => {
+  const handleUsernameChange = (event: any) => {
     setUserName(event.target.value);
   };
-  const handleEmailRegister = (event) => {
+  const handleEmailRegister = (event: any) => {
     setEmailRegister(event.target.value);
   };
-  const handleMobileNumber = (event) => {
+  const handleMobileNumber = (event: any) => {
     setMobileNumber(event.target.value);
   };
-  const handlePasswordRegister = (event) => {
+  const handlePasswordRegister = (event: any) => {
     setPasswordRegister(event.target.value);
   };
   const handleRegisterClick = () => {
@@ -93,8 +115,9 @@ const Header = () => {
     <Navbar bg="dark" variant="dark" expand="lg">
       <Container fluid>
         <Navbar.Brand href="/" style={{ color: "gold" }}>
-{/*           <FontAwesomeIcon icon={faVideoSlash} />
- */}          Gold
+          {/*           <FontAwesomeIcon icon={faVideoSlash} />
+           */}{" "}
+          Gold
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">

@@ -9,11 +9,15 @@ body {
   margin: 0;
 }
 .App {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1440px;
+  min-width: 1440px;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background-color: #0d263c;
-    background-image: linear-gradient(
+  background-image: linear-gradient(
     140deg,
     #bfd641 0%,
     #bc70a4 50%,
@@ -21,4 +25,10 @@ body {
   );
   color: white;
   margin-top: 10px;
+}
+.modal-content label {
+  color: #0d263c;
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 600;
 }

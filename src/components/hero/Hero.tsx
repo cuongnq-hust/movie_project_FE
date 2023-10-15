@@ -6,13 +6,12 @@ import { faCirclePlay } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { URL_BE } from "../../constant/constant";
 import React, { useEffect, useState } from "react";
 import { authHeader } from "../../auth";
 import api from "../api/axiosConfig";
+import { URL_BE } from "../../utils/constants";
 
 const Hero = () => {
-  const [email, setEmail] = useState<any>("");
   const [movies, setMovies] = useState<any>([]);
 
   const getAllMovie = async () => {
@@ -29,21 +28,6 @@ const Hero = () => {
 
   useEffect(() => {
     getAllMovie();
-  }, []);
-
-  const getUser = async () => {
-    try {
-      const response = await api.get(`${URL_BE}/auth/user`, {
-        headers: authHeader(),
-      });
-      if (response?.data) setEmail(response?.data?.user_id);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    getUser();
   }, []);
 
   const navigate = useNavigate();

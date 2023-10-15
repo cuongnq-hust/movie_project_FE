@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./MovieDetail.scss";
-import { URL_BE } from "../../constant/constant";
 import { authHeader } from "../../auth";
 import api from "../../components/api/axiosConfig";
 import Button from "react-bootstrap/Button";
 import { Link, useNavigate } from "react-router-dom";
+import { URL_BE } from "../../utils/constants";
 
 const MovieDetail = () => {
   const { id } = useParams();

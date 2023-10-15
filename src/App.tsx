@@ -1,4 +1,5 @@
 import "./App.css";
+import "react-toastify/dist/ReactToastify.css";
 import { Routes, Route } from "react-router-dom";
 import Header from "./components/header/header";
 import Trailer from "./components/trailer/Trailer";
@@ -6,6 +7,7 @@ import NotFound from "./components/notFound/NotFound";
 import MovieDetail from "./pages/MovieDetail/MovieDetail";
 import Home from "./pages/Home/Home";
 import ReviewDetail from "./pages/ReviewDetail/ReviewDetail";
+import Toast from "./components/LoadingError/Toast";
 
 function App() {
   // console.log("dayy la movie", movies);
@@ -22,6 +24,7 @@ function App() {
         <Route path="*" element={<NotFound />}></Route>
         {/* </Route> */}
       </Routes>
+      <Toast />
     </div>
   );
 }
