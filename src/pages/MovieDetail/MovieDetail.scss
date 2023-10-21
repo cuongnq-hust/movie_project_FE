@@ -79,6 +79,9 @@
   letter-spacing: 2px;
   text-transform: uppercase;
   margin-bottom: 20px;
+
+  display: flex;
+  justify-content: space-between;
 }
 .movie__poster {
   width: 600px;

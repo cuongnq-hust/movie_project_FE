@@ -9,6 +9,7 @@ import Home from "./pages/Home/Home";
 import ReviewDetail from "./pages/ReviewDetail/ReviewDetail";
 import Toast from "./components/LoadingError/Toast";
 import CategoryList from "./pages/CategoryList/CategoryList";
+import CategoryCreate from "./pages/CategoryCreate/CategoryCreate";
 
 function App() {
   // console.log("dayy la movie", movies);
@@ -22,6 +23,7 @@ function App() {
         <Route path="/Trailer/:ytTrailerId" element={<Trailer />}></Route>
         <Route path="/movie/:id" element={<MovieDetail />} />
         <Route path="/category-list" element={<CategoryList />} />
+        <Route path="/category-create" element={<CategoryCreate />} />
         <Route path="/review-detail" element={<ReviewDetail />} />
         <Route path="*" element={<NotFound />}></Route>
         {/* </Route> */}

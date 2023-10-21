@@ -12,44 +12,40 @@ import { openToast } from "../../store/storeComponent/customDialog/toastSlice";
 const CategoryList = () => {
   const dispatch = useDispatch();
 
-  const [movie, setMovie] = useState<any>({});
-  const [reviews, setReviews] = useState<any>([]);
+  const [movie, setMovie] = useState<any>([]);
+  const [categories, setCategories] = useState<any>([]);
   const [newReview, setNewReview] = useState<any>("");
-  console.log(movie);
-  // const getMovieById = async () => {
-  //   try {
-  //     const response = await api.get(`${URL_BE}/movie/${id}`, {
-  //       headers: authHeader(),
-  //     });
-  //     if (response?.data) setMovie(response?.data);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+  const getMovieByCategoryId = async (id: any) => {
+    try {
+      const response = await api.get(`${URL_BE}/movie/findByCategoryId/${id}`, {
+        headers: authHeader(),
+      });
+      if (response?.data) setMovie(response?.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-  // const getReviewByMovie = async () => {
-  //   try {
-  //     const response = await api.get(
-  //       `${URL_BE}/review/findReviewByMovieId/${id}`,
-  //       {
-  //         headers: authHeader(),
-  //       }
-  //     );
-  //     if (response?.data) setReviews(response?.data);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+  const getCategoryAll = async () => {
+    try {
+      const response = await api.get(`${URL_BE}/category/all`, {
+        headers: authHeader(),
+      });
+      if (response?.data) setCategories(response?.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
     // getMovieById();
-    // getReviewByMovie();
+    getCategoryAll();
   }, []);
 
   // useEffect(() => {
   //   fetch(`${URL_BE}/review/${id}/reviews`)
   //     .then((response) => response.json())
-  //     .then((data) => setReviews(data))
+  //     .then((data) => setCategories(data))
   //     .catch((error) => console.error(error));
   // }, [id]);
 
@@ -85,31 +81,41 @@ const CategoryList = () => {
 
   return (
     <div className="grid-container">
-      {movie && (
-        <div className="movie-details">
-          <div className="movie__title">
-            category: {movie?.categoryMovie?.title}
-          </div>
-          <div className="movie__title">name: {movie?.title}</div>
-          <img className="movie__poster" src={movie?.poster} alt="poster" />
-        </div>
-      )}
+      <div className="movie-details">
+        <Button
+          onClick={() => {
+            navigate("/category-create");
+          }}
+        >
+          Create Category
+        </Button>
+
+        {categories.map((cate: any, index: any) => {
+          return (
+            <div
+              key={index}
+              onClick={() => {
+                getMovieByCategoryId(cate?.id);
+              }}
+              className="movie__title"
+            >
+              name: {cate?.title}
+            </div>
+          );
+        })}
+      </div>
       <div className="review-list">
         <div>
-          <h1>Review List</h1>
+          <h1>Movie List</h1>
           <div className="review__list">
-            {reviews.map((review: any) => (
-              <div className="review__item" key={review.id}>
-                <p>{review.body}</p>
-                <Button
-                  onClick={() => {
-                    navigate(`/review-detail?id=${review?.id}`);
-                  }}
-                  variant="primary"
-                  type="submit"
-                >
-                  Detail
-                </Button>
+            {movie.map((review: any, index: any) => (
+              <div className="movie-details" key={index}>
+                <div className="movie__title">name: {review?.title}</div>
+                <img
+                  className="movie__poster"
+                  src={review?.poster}
+                  alt="poster"
+                />
               </div>
             ))}
           </div>
