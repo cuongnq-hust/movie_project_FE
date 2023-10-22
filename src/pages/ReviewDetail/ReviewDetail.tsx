@@ -231,19 +231,42 @@ const ReviewDetail = () => {
           alt="poster"
         />
       </div>
-      <p className="Hero__NewItem__newItemTitle">{reviewItem?.body}</p>
+      <div className="df mt30px">
+        <p className="Hero__NewItem__newItemTitle">{reviewItem?.body}</p>
+        {userInfo?.email === reviewItem?.user?.user_id && (
+          <div className="actions">
+            <Button
+              variant="warning"
+              onClick={() => {
+                setshowUpdateReview(!showUpdateReview);
+              }}
+            >
+              Update Review
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => {
+                deleteReview(reviewItem?.id);
+              }}
+              type="submit"
+            >
+              Delete Review
+            </Button>
+          </div>
+        )}
+      </div>
       <div className="Hero__NewItem__commentList">
         {comments.map((commentItem: any, index: number) => {
           return (
             <CommentDetail
               key={index}
               commentItem={commentItem}
+              userInfo={userInfo}
               getCommentByReview={getCommentByReview}
             ></CommentDetail>
           );
         })}
       </div>
-
       <div className="comment_form">
         <h2>Thêm Bình Luận</h2>
         <textarea
@@ -258,32 +281,11 @@ const ReviewDetail = () => {
         ></textarea>
         <Button onClick={submitComment}>Submit</Button>
       </div>
-      {userInfo?.email === reviewItem?.user?.user_id ? (
-        <div className="actions">
-          <Button
-            variant="warning"
-            onClick={() => {
-              setshowUpdateReview(!showUpdateReview);
-            }}
-          >
-            Update Review
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => {
-              deleteReview(reviewItem?.id);
-            }}
-            type="submit"
-          >
-            Delete Review
-          </Button>
-        </div>
-      ) : null}
     </div>
   );
 };
 
-const CommentDetail = ({ commentItem, getCommentByReview }: any) => {
+const CommentDetail = ({ commentItem, getCommentByReview, userInfo }: any) => {
   const dispatch = useDispatch();
   const [showUpdateCom, setshowUpdateCom] = useState<any>(false);
   const [newCom, setnewCom] = useState<any>(commentItem?.body);
@@ -352,6 +354,8 @@ const CommentDetail = ({ commentItem, getCommentByReview }: any) => {
       );
     }
   };
+  console.log(commentItem?.user?.email);
+  console.log(userInfo?.email);
   return (
     <div className="Hero__NewItem__commentItem ml40px">
       <Modal
@@ -399,25 +403,28 @@ const CommentDetail = ({ commentItem, getCommentByReview }: any) => {
         </Modal.Body>
       </Modal>
       <div className="title">{commentItem?.body}</div>
-      <div className="actions">
-        <Button
-          variant="warning"
-          onClick={() => {
-            setshowUpdateCom(!showUpdateCom);
-          }}
-        >
-          Update Comment
-        </Button>
-        <Button
-          variant="danger"
-          onClick={() => {
-            deleteComment(commentItem?.id);
-          }}
-          type="submit"
-        >
-          Delete Comment
-        </Button>
-      </div>
+
+      {commentItem?.user?.email === userInfo?.email && (
+        <div className="actions">
+          <Button
+            variant="warning"
+            onClick={() => {
+              setshowUpdateCom(!showUpdateCom);
+            }}
+          >
+            Update Comment
+          </Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+              deleteComment(commentItem?.id);
+            }}
+            type="submit"
+          >
+            Delete Comment
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

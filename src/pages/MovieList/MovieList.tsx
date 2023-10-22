@@ -12,7 +12,6 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { formatMoney } from "../../utils/commonFunction";
 
-
 const MovieList = () => {
   const dispatch = useDispatch();
 
@@ -69,7 +68,6 @@ const MovieList = () => {
           movieId: id,
           quantity: 4,
         },
-
         {
           headers: authHeader(),
         }
@@ -229,7 +227,7 @@ const MovieList = () => {
                 </Button>
               </div>
               <div className="df mt10px">
-                <div className="movie__title">price: {mov?.price}</div>
+                <div className="movie__title">price: {formatMoney(mov?.price)} đ</div>
                 <Button
                   variant="dark"
                   onClick={() => {
