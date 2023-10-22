@@ -5,18 +5,18 @@ import { authHeader } from "../../auth";
 import api from "../../components/api/axiosConfig";
 import Button from "react-bootstrap/Button";
 import { Link, useNavigate } from "react-router-dom";
-import { RE_NUMBER, URL_BE } from "../../utils/constants";
+import { RE_NUMBER, URL_BE, sizeMax } from "../../utils/constants";
 import { useDispatch } from "react-redux";
 import { openToast } from "../../store/storeComponent/customDialog/toastSlice";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { formatMoney } from "../../utils/commonFunction";
 
-const sizeMax = 5 * 1000 * 1000;
 
 const MovieList = () => {
   const dispatch = useDispatch();
 
+  const [cartId, setcartId] = useState<any>("");
   const [movies, setMovies] = useState<any>([]);
   const [categories, setCategories] = useState<any>([]);
   const [title, settitle] = useState<any>("");
@@ -49,10 +49,43 @@ const MovieList = () => {
       console.log(err);
     }
   };
+  const getCartNow = async () => {
+    try {
+      const response = await api.get(`${URL_BE}/cart/cartNow`, {
+        headers: authHeader(),
+      });
+      if (response?.data) {
+        setcartId(response?.data?.id);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const onAddToCart = async (id: any) => {
+    try {
+      const response = await api.post(
+        `${URL_BE}/cart/new`,
+        {
+          movieId: id,
+          quantity: 4,
+        },
+
+        {
+          headers: authHeader(),
+        }
+      );
+      if (response?.data) {
+        setcartId(response?.data?.id);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
     getCategoryAll();
     getMovieAll();
+    getCartNow();
   }, []);
 
   const getCategoryAll = async () => {
@@ -170,16 +203,18 @@ const MovieList = () => {
     } else {
     }
   };
+
   return (
     <div className="grid-container">
       <div className="movie-details">
         {movies.map((mov: any, index: any) => {
           return (
             <div key={index}>
-              <div className="movie__title underline"
-              onClick={()=>{
-                navigate(`/category-list?id=${mov?.categoryMovie?.id}`)
-              }}
+              <div
+                className="movie__title underline"
+                onClick={() => {
+                  navigate(`/category-list?id=${mov?.categoryMovie?.id}`);
+                }}
               >
                 category: {mov?.categoryMovie?.title}
               </div>
@@ -191,6 +226,17 @@ const MovieList = () => {
                   }}
                 >
                   Detail
+                </Button>
+              </div>
+              <div className="df mt10px">
+                <div className="movie__title">price: {mov?.price}</div>
+                <Button
+                  variant="dark"
+                  onClick={() => {
+                    onAddToCart(mov?.id);
+                  }}
+                >
+                  BUY
                 </Button>
               </div>
               <img

@@ -22,13 +22,6 @@
   margin-bottom: 10px;
 }
 
-.movie-details img {
-  width: 100%;
-  max-width: 200px;
-  height: auto;
-  margin-bottom: 10px;
-}
-
 .review-list {
   padding: 20px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
@@ -60,7 +53,6 @@
 
 .review-form button {
   padding: 10px 20px;
-  background-color: #007bff;
   border: none;
   cursor: pointer;
 }
@@ -99,6 +91,18 @@
   height: 400px;
   min-width: 670px;
   min-height: 400px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center center;
+  object-fit: cover;
+}
+
+.register__ava {
+  width: 200px;
+  height: 200px;
+  min-width: 200px;
+  min-height: 200px;
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;

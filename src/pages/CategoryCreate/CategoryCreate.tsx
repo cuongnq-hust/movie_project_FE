@@ -34,12 +34,15 @@ const CategoryCreate = () => {
   const submitCategory = async () => {
     if (localStorage.getItem("access_token") != null) {
       try {
-        const response = await api.post(`${URL_BE}/category/new`, cate.trim(), {
-          headers: {
-            "Content-Type": "text/plain",
-            ...authHeader(),
+        const response = await api.post(
+          `${URL_BE}/category/new`,
+          {
+            title: cate.trim(),
           },
-        });
+          {
+            headers: authHeader(),
+          }
+        );
         if (response?.data) {
           setCate("");
           getCategoryAll();
@@ -110,12 +113,11 @@ const CategoryDetail = ({ cate, getCategoryAll }: any) => {
     try {
       const response = await api.post(
         `${URL_BE}/category/update/${id}`,
-        newCate.trim(),
         {
-          headers: {
-            "Content-Type": "text/plain",
-            ...authHeader(),
-          },
+          title: newCate.trim(),
+        },
+        {
+          headers: authHeader(),
         }
       );
       if (response?.status === 201) {

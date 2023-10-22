@@ -78,6 +78,12 @@ body {
   box-shadow: 0 0 10px #00b3ff, 0 0 20px #00b3ff, 0 0 40px #00b3ff,
     0 0 80px #00b3ff;
 }
+.btn.btn-dark {
+  -webkit-box-shadow: 0 0 10px #212529, 0 0 20px #212529, 0 0 40px #212529,
+    0 0 80px #212529;
+  box-shadow: 0 0 10px #212529, 0 0 20px #212529, 0 0 40px #212529,
+    0 0 80px #212529;
+}
 
 .btn.btn-danger {
   -webkit-box-shadow: 0 0 10px pink, 0 0 20px pink, 0 0 40px pink,
