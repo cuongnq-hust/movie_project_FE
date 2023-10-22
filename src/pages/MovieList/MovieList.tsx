@@ -48,13 +48,14 @@ const MovieList = () => {
       console.log(err);
     }
   };
-  const getCartNow = async () => {
+  const getCartNow = async (id: any) => {
     try {
       const response = await api.get(`${URL_BE}/cart/cartNow`, {
         headers: authHeader(),
       });
       if (response?.data) {
         setcartId(response?.data?.id);
+        onAddToCart(id);
       }
     } catch (err) {
       console.log(err);
@@ -83,7 +84,6 @@ const MovieList = () => {
   useEffect(() => {
     getCategoryAll();
     getMovieAll();
-    getCartNow();
   }, []);
 
   const getCategoryAll = async () => {
@@ -227,11 +227,13 @@ const MovieList = () => {
                 </Button>
               </div>
               <div className="df mt10px">
-                <div className="movie__title">price: {formatMoney(mov?.price)} đ</div>
+                <div className="movie__title">
+                  price: {formatMoney(mov?.price)} đ
+                </div>
                 <Button
                   variant="dark"
                   onClick={() => {
-                    onAddToCart(mov?.id);
+                    getCartNow(mov?.id);
                   }}
                 >
                   BUY

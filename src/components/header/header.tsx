@@ -91,7 +91,14 @@ const Header = () => {
       <div className="menu__item clothes__list--show">
         {access_token ? (
           <div className="df">
-            <div className="underline">Hi {user}</div>
+            <div
+              onClick={() => {
+                navigate("/update-profile");
+              }}
+              className="underline"
+            >
+              Hi {user}
+            </div>
             <Button variant="danger" onClick={handleLogout}>
               Đăng xuất
             </Button>
