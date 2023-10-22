@@ -60,7 +60,10 @@ const MovieDetail = () => {
           `${URL_BE}/review/${id}`,
           newReview.trim(),
           {
-            headers: authHeader(),
+            headers: {
+              "Content-Type": "text/plain",
+              ...authHeader(),
+            },
           }
         );
         if (response?.data) {

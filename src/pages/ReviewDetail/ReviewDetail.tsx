@@ -64,7 +64,10 @@ const ReviewDetail = () => {
           `${URL_BE}/comment/${reviewId}`,
           commentForReview.trim(),
           {
-            headers: authHeader(),
+            headers: {
+              "Content-Type": "text/plain",
+              ...authHeader(),
+            },
           }
         );
         if (response?.data) {
@@ -102,8 +105,8 @@ const ReviewDetail = () => {
         newReview.trim(),
         {
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            "Content-Type": "text/plain",
+            ...authHeader(),
           },
         }
       );
@@ -208,6 +211,26 @@ const ReviewDetail = () => {
           </div>
         </Modal.Body>
       </Modal>
+      <div className="movie-details">
+        <div className="movie__title underline">
+          category: {reviewItem?.movie?.categoryMovie?.title}
+        </div>
+        <div className="df">
+          <div className="movie__title">name: {reviewItem?.movie?.title}</div>
+          <Button
+            onClick={() => {
+              navigate(`/movie/${reviewItem?.movie?.id}`);
+            }}
+          >
+            Detail
+          </Button>
+        </div>
+        <img
+          className="movie__poster mt10px"
+          src={reviewItem?.movie?.poster}
+          alt="poster"
+        />
+      </div>
       <p className="Hero__NewItem__newItemTitle">{reviewItem?.body}</p>
       <div className="Hero__NewItem__commentList">
         {comments.map((commentItem: any, index: number) => {
@@ -302,8 +325,8 @@ const CommentDetail = ({ commentItem, getCommentByReview }: any) => {
         newCom.trim(),
         {
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            "Content-Type": "text/plain",
+            ...authHeader(),
           },
         }
       );
@@ -330,7 +353,7 @@ const CommentDetail = ({ commentItem, getCommentByReview }: any) => {
     }
   };
   return (
-    <div className="Hero__NewItem__commentItem">
+    <div className="Hero__NewItem__commentItem ml40px">
       <Modal
         show={showUpdateCom}
         onHide={() => {

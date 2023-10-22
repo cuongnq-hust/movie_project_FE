@@ -7,6 +7,9 @@
 .movie-details {
   padding: 20px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 }
 
 .movie-details h1 {
@@ -82,11 +85,19 @@
 
   display: flex;
   justify-content: space-between;
+  cursor: pointer;
+}
+.choose {
+  text-shadow:
+    0 0 10px orangered,
+    0 0 20px orangered,
+    0 0 40px orangered,
+    0 0 80px orangered;
 }
 .movie__poster {
-  width: 600px;
+  width: 670px;
   height: 400px;
-  min-width: 600px;
+  min-width: 670px;
   min-height: 400px;
   background-size: cover;
   background-repeat: no-repeat;

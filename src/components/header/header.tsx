@@ -14,13 +14,26 @@ import { setUserInfo } from "../../store/storeComponent/auth/authSlice";
 import { URL_BE } from "../../utils/constants";
 import { useNavigate } from "react-router-dom";
 
+const arr = [
+  {
+    id: 1,
+    navigate: "/category-list",
+    label: "category",
+  },
+  {
+    id: 2,
+    navigate: "/movie-list",
+    label: "movie",
+  },
+];
+
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const [showLoginForm, setShowLoginForm] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const pathname = window.location.pathname;
+  const [showLoginForm, setShowLoginForm] = useState<any>(false);
+  const [email, setEmail] = useState<any>("");
+  const [password, setPassword] = useState<any>("");
 
   const getUser = async () => {
     try {
@@ -74,11 +87,12 @@ const Header = () => {
     localStorage.removeItem("username");
     window.location.reload();
   };
-  const [userName, setUserName] = useState("");
-  const [emailRegister, setEmailRegister] = useState("");
-  const [mobileNumber, setMobileNumber] = useState("");
-  const [passwordRegister, setPasswordRegister] = useState("");
-  const [showRegisterForm, setShowRegisterForm] = useState(false);
+  const [userName, setUserName] = useState<any>("");
+  const [emailRegister, setEmailRegister] = useState<any>("");
+  const [mobileNumber, setMobileNumber] = useState<any>("");
+  const [passwordRegister, setPasswordRegister] = useState<any>("");
+  const [image, setimage] = useState<any>("");
+  const [showRegisterForm, setShowRegisterForm] = useState<any>(false);
   const handleUsernameChange = (event: any) => {
     setUserName(event.target.value);
   };
@@ -104,6 +118,7 @@ const Header = () => {
         email: emailRegister,
         mobile_number: mobileNumber,
         password: passwordRegister,
+        image: image,
       });
       if (response.data.statusCodeValue === 200) {
         handleCloseRegisterForm();
@@ -162,21 +177,27 @@ const Header = () => {
           </>
         )}
       </div>
+      {arr.map((it: any) => {
+        return (
+          <div
+            key={it.id}
+            onClick={() => {
+              navigate(it.navigate);
+            }}
+            className={
+              pathname.includes(it.label)
+                ? "menu__item word__list--show choose"
+                : "menu__item word__list--show"
+            }
+          >
+            {it.label}
+          </div>
+        );
+      })}
 
-      <div
-        onClick={() => {
-          navigate("/category-list");
-        }}
-        className="menu__item word__list--show"
-      >
-        category
-      </div>
+      {/* <div className="menu__item bizz__list--show">#zingchart</div> */}
 
-      <div className="menu__item man__list--show">radio</div>
-
-      <div className="menu__item bizz__list--show">#zingchart</div>
-
-      <div className="menu__item watch__list--show">theo dõi</div>
+      {/* <div className="menu__item watch__list--show">theo dõi</div> */}
     </div>
   );
 };
