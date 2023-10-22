@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import "./ReviewDetail.scss";
+import "./Cart.scss";
 import { authHeader } from "../../auth";
 import api from "../../components/api/axiosConfig";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,89 +12,31 @@ import { useDispatch } from "react-redux";
 import { openToast } from "../../store/storeComponent/customDialog/toastSlice";
 import Modal from "react-bootstrap/Modal";
 
-const ReviewDetail = () => {
+const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  const reviewId = urlParams.get("id") ?? "";
-
+  const [cartId, setcartId] = useState<any>("");
   const userInfo = useSelector(getUserInfo);
 
   const [comments, setComments] = useState<any>([]);
   const [reviewItem, setreviewItem] = useState<any>({});
 
-  const getReviewById = async () => {
+  const getCartNow = async () => {
     try {
-      const response = await api.get(`${URL_BE}/review/review/${reviewId}`, {
+      const response = await api.get(`${URL_BE}/cart/cartNow`, {
         headers: authHeader(),
       });
       if (response?.data) {
-        setreviewItem(response.data);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const getCommentByReview = async () => {
-    try {
-      const response = await api.get(
-        `${URL_BE}/comment/findByReviewId/${reviewId}`,
-        {
-          headers: authHeader(),
-        }
-      );
-      if (response?.data) {
-        setComments(response.data);
+        setcartId(response?.data?.id);
       }
     } catch (err) {
       console.log(err);
     }
   };
   useEffect(() => {
-    getCommentByReview();
-    getReviewById();
+    getCartNow();
   }, []);
-  const [commentForReview, setNewComment] = useState<any>("");
-  const submitComment = async () => {
-    if (localStorage.getItem("access_token") != null) {
-      try {
-        const response = await api.post(
-          `${URL_BE}/comment/${reviewId}`,
-          commentForReview.trim(),
-          {
-            headers: {
-              "Content-Type": "text/plain",
-              ...authHeader(),
-            },
-          }
-        );
-        if (response?.data) {
-          setNewComment("");
-          getCommentByReview();
-          dispatch(
-            openToast({
-              isOpen: Date.now(),
-              content: "A Comment Has been created !",
-              step: 1,
-            })
-          );
-        }
-      } catch (err) {
-        console.log(err);
-        dispatch(
-          openToast({
-            isOpen: Date.now(),
-            content: "A Comment Has been Failed !",
-            step: 2,
-          })
-        );
-      }
-    } else {
-      alert("Ban can Dang nhap de them binh luan");
-    }
-  };
 
   const [showUpdateReview, setshowUpdateReview] = useState<any>(false);
   const [newReview, setnewReview] = useState<any>(reviewItem?.body);
@@ -111,7 +53,6 @@ const ReviewDetail = () => {
         }
       );
       if (response?.status === 201) {
-        getReviewById();
         setshowUpdateReview(false);
         dispatch(
           openToast({
@@ -142,7 +83,6 @@ const ReviewDetail = () => {
         },
       });
       if (response?.status === 200) {
-        getReviewById();
         setshowUpdateReview(false);
         navigate(-1);
         dispatch(
@@ -167,125 +107,47 @@ const ReviewDetail = () => {
 
   return (
     <div className="layout">
-      <Modal
-        show={showUpdateReview}
-        onHide={() => {
-          setshowUpdateReview(false);
-        }}
-      >
-        <Modal.Body>
-          <div>
-            <div>
-              <label>Review: </label>
-              <div>{reviewItem?.body}</div>
-            </div>
-            <div>
-              <label>New Review:</label>
-
-              <div>
-                <textarea
-                  autoFocus
-                  rows={4}
-                  value={newReview}
-                  onChange={(e) => {
-                    setnewReview(e.target.value);
-                  }}
-                  placeholder="Enter your comment..."
-                  onKeyDown={(event) => {
-                    if (event.code === "Enter") {
-                      updateReview(reviewItem?.id);
-                    }
-                  }}
-                ></textarea>
-              </div>
-            </div>
-            <Button
-              onClick={() => {
-                updateReview(reviewItem?.id);
-              }}
-              variant="warning"
-              type="submit"
-            >
-              Update
-            </Button>
-          </div>
-        </Modal.Body>
-      </Modal>
-      <div className="movie-details">
-        <div className="movie__title underline">
-          category: {reviewItem?.movie?.categoryMovie?.title}
-        </div>
-        <div className="df">
-          <div className="movie__title">name: {reviewItem?.movie?.title}</div>
-          <Button
-            onClick={() => {
-              navigate(`/movie/${reviewItem?.movie?.id}`);
-            }}
-          >
-            Detail
-          </Button>
-        </div>
-        <img
-          className="movie__poster mt10px"
-          src={reviewItem?.movie?.poster}
-          alt="poster"
-        />
-      </div>
-      <div className="df mt30px">
-        <p className="Hero__NewItem__newItemTitle">{reviewItem?.body}</p>
-        {userInfo?.email === reviewItem?.user?.user_id && (
-          <div className="actions">
-            <Button
-              variant="warning"
-              onClick={() => {
-                setshowUpdateReview(!showUpdateReview);
-              }}
-            >
-              Update Review
-            </Button>
-            <Button
-              variant="danger"
-              onClick={() => {
-                deleteReview(reviewItem?.id);
-              }}
-              type="submit"
-            >
-              Delete Review
-            </Button>
-          </div>
-        )}
-      </div>
+      <p className="Hero__NewItem__newItemTitle">{reviewItem?.body}</p>
       <div className="Hero__NewItem__commentList">
         {comments.map((commentItem: any, index: number) => {
           return (
             <CommentDetail
               key={index}
               commentItem={commentItem}
-              userInfo={userInfo}
-              getCommentByReview={getCommentByReview}
             ></CommentDetail>
           );
         })}
       </div>
+
       <div className="comment_form">
-        <h2>Thêm Bình Luận</h2>
-        <textarea
-          value={commentForReview}
-          onChange={(e) => setNewComment(e.target.value)}
-          placeholder="Enter your comment..."
-          onKeyDown={(event) => {
-            if (event.code === "Enter") {
-              submitComment();
-            }
-          }}
-        ></textarea>
-        <Button onClick={submitComment}>Submit</Button>
+        <Button onClick={() => {}}>Check to Order</Button>
       </div>
+      {userInfo?.email === reviewItem?.user?.user_id ? (
+        <div className="actions">
+          <Button
+            variant="warning"
+            onClick={() => {
+              setshowUpdateReview(!showUpdateReview);
+            }}
+          >
+            Update Review
+          </Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+              deleteReview(reviewItem?.id);
+            }}
+            type="submit"
+          >
+            Delete Review
+          </Button>
+        </div>
+      ) : null}
     </div>
   );
 };
 
-const CommentDetail = ({ commentItem, getCommentByReview, userInfo }: any) => {
+const CommentDetail = ({ commentItem, getCommentByReview }: any) => {
   const dispatch = useDispatch();
   const [showUpdateCom, setshowUpdateCom] = useState<any>(false);
   const [newCom, setnewCom] = useState<any>(commentItem?.body);
@@ -354,8 +216,6 @@ const CommentDetail = ({ commentItem, getCommentByReview, userInfo }: any) => {
       );
     }
   };
-  console.log(commentItem?.user?.email);
-  console.log(userInfo?.email);
   return (
     <div className="Hero__NewItem__commentItem ml40px">
       <Modal
@@ -403,30 +263,27 @@ const CommentDetail = ({ commentItem, getCommentByReview, userInfo }: any) => {
         </Modal.Body>
       </Modal>
       <div className="title">{commentItem?.body}</div>
-
-      {commentItem?.user?.email === userInfo?.email && (
-        <div className="actions">
-          <Button
-            variant="warning"
-            onClick={() => {
-              setshowUpdateCom(!showUpdateCom);
-            }}
-          >
-            Update Comment
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => {
-              deleteComment(commentItem?.id);
-            }}
-            type="submit"
-          >
-            Delete Comment
-          </Button>
-        </div>
-      )}
+      <div className="actions">
+        <Button
+          variant="warning"
+          onClick={() => {
+            setshowUpdateCom(!showUpdateCom);
+          }}
+        >
+          Update Comment
+        </Button>
+        <Button
+          variant="danger"
+          onClick={() => {
+            deleteComment(commentItem?.id);
+          }}
+          type="submit"
+        >
+          Delete Comment
+        </Button>
+      </div>
     </div>
   );
 };
 
-export default ReviewDetail;
+export default Cart;

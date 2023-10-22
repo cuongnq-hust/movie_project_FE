@@ -12,121 +12,105 @@ import { openToast } from "../../store/storeComponent/customDialog/toastSlice";
 const CategoryList = () => {
   const dispatch = useDispatch();
 
-  const [movie, setMovie] = useState<any>({});
-  const [reviews, setReviews] = useState<any>([]);
-  const [newReview, setNewReview] = useState<any>("");
-  console.log(movie);
-  // const getMovieById = async () => {
-  //   try {
-  //     const response = await api.get(`${URL_BE}/movie/${id}`, {
-  //       headers: authHeader(),
-  //     });
-  //     if (response?.data) setMovie(response?.data);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const cateIdurl = urlParams.get("id") ?? "";
 
-  // const getReviewByMovie = async () => {
-  //   try {
-  //     const response = await api.get(
-  //       `${URL_BE}/review/findReviewByMovieId/${id}`,
-  //       {
-  //         headers: authHeader(),
-  //       }
-  //     );
-  //     if (response?.data) setReviews(response?.data);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+  const [movies, setMovies] = useState<any>([]);
+  const [categories, setCategories] = useState<any>([]);
+  const [cateId, setCateId] = useState<any>(cateIdurl);
+  const getMovieByCategoryId = async (id: any) => {
+    try {
+      const response = await api.get(`${URL_BE}/movie/findByCategoryId/${id}`, {
+        headers: authHeader(),
+      });
+      if (response?.data) {
+        let Movies_temp: any = response?.data ?? [];
+        Movies_temp.sort((a: any, b: any) =>
+          a.create_At > b.create_At ? -1 : b.create_At > a.create_At ? 1 : 0
+        );
+        setMovies(Movies_temp);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getCategoryAll = async () => {
+    try {
+      const response = await api.get(`${URL_BE}/category/all`, {
+        headers: authHeader(),
+      });
+      if (response?.data) {
+        setCategories(response?.data);
+        if (response?.data.length > 0) {
+          if (cateIdurl) {
+            setCateId(cateIdurl);
+            getMovieByCategoryId(cateIdurl);
+          } else {
+            setCateId(response?.data[0]?.id);
+            getMovieByCategoryId(response?.data[0]?.id);
+          }
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
     // getMovieById();
-    // getReviewByMovie();
+    getCategoryAll();
   }, []);
 
-  // useEffect(() => {
-  //   fetch(`${URL_BE}/review/${id}/reviews`)
-  //     .then((response) => response.json())
-  //     .then((data) => setReviews(data))
-  //     .catch((error) => console.error(error));
-  // }, [id]);
-
-  const submitReview = async () => {
-    // if (localStorage.getItem("access_token") != null) {
-    //   try {
-    //     const response = await api.post(
-    //       `${URL_BE}/review/${id}`,
-    //       newReview.trim(),
-    //       {
-    //         headers: authHeader(),
-    //       }
-    //     );
-    //     if (response?.data) {
-    //       getReviewByMovie();
-    //       setNewReview("");
-    //       dispatch(
-    //         openToast({
-    //           isOpen: Date.now(),
-    //           content: "A Review Has been Created !",
-    //           step: 1,
-    //         })
-    //       );
-    //     }
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
-    // } else {
-    //   alert("Ban can Dang nhap de them binh luan");
-    // }
-  };
   const navigate = useNavigate();
 
   return (
     <div className="grid-container">
-      {movie && (
-        <div className="movie-details">
-          <div className="movie__title">
-            category: {movie?.categoryMovie?.title}
-          </div>
-          <div className="movie__title">name: {movie?.title}</div>
-          <img className="movie__poster" src={movie?.poster} alt="poster" />
-        </div>
-      )}
+      <div className="movie-details">
+        <Button
+          className="mb40px"
+          onClick={() => {
+            navigate("/category-create");
+          }}
+        >
+          Create Category
+        </Button>
+
+        {categories.map((cate: any, index: any) => {
+          return (
+            <div
+              key={index}
+              onClick={() => {
+                getMovieByCategoryId(cate?.id);
+                setCateId(cate?.id);
+              }}
+              className={
+                cateId.toString() === cate?.id.toString()
+                  ? "movie__title choose"
+                  : "movie__title"
+              }
+            >
+              name: {cate?.title}
+            </div>
+          );
+        })}
+      </div>
       <div className="review-list">
         <div>
-          <h1>Review List</h1>
+          <h1>Movie List</h1>
           <div className="review__list">
-            {reviews.map((review: any) => (
-              <div className="review__item" key={review.id}>
-                <p>{review.body}</p>
-                <Button
-                  onClick={() => {
-                    navigate(`/review-detail?id=${review?.id}`);
-                  }}
-                  variant="primary"
-                  type="submit"
-                >
-                  Detail
-                </Button>
+            {movies.map((review: any, index: any) => (
+              <div className="movie-details" key={index}>
+                <div className="movie__title">name: {review?.title}</div>
+                <img
+                  className="movie__poster"
+                  src={review?.poster}
+                  alt="poster"
+                />
               </div>
             ))}
           </div>
-        </div>
-        <div className="review-form">
-          <h2>Submit Review</h2>
-          <textarea
-            value={newReview}
-            onChange={(e) => setNewReview(e.target.value)}
-            placeholder="Enter your review..."
-            onKeyDown={(event) => {
-              if (event.code === "Enter") {
-                submitReview();
-              }
-            }}
-          ></textarea>
-          <Button onClick={submitReview}>Submit</Button>
         </div>
       </div>
     </div>

@@ -7,3 +7,8 @@ export const Toastobjects = {
   pauseOnHover: false,
   autoClose: 2000,
 };
+export const RE_NUMBER = /^[0-9\b]+$/;
+export const RE_DECIMAL = /^\d{1,}(\.\d{0,4})?$/;
+export const REGEX_CURRENCY = /(\d)(?=(\d{3})+(?!\d))/g
+export const sizeMax = 5 * 1000 * 1000;
+

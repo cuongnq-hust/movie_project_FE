@@ -3,14 +3,20 @@
     background-color: black;
 }
 .movie-poster {
-    height: 300px;
     border: 1px solid gold;
     border-radius: 10px;
     overflow: hidden;
 }
 .movie-poster > img {
-    height: 100%;
-    width: 100%;
+    width: 530px;
+    height: 300px;
+    min-width: 530px;
+    min-height: 300px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center center;
+    object-fit: cover;
 }
 .movie-card-container {
     height: 550px;
