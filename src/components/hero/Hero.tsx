@@ -1,18 +1,48 @@
 import "./Hero.scss";
 import Carousel from "react-material-ui-carousel";
 import { Paper } from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlay } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { authHeader } from "../../auth";
 import api from "../api/axiosConfig";
 import { URL_BE } from "../../utils/constants";
 import Icons from "./../../asset/circle.svg";
+import { PayPalButton } from "react-paypal-button-v2";
+
 const Hero = () => {
+  const [sdkReady, setSdkReady] = useState<any>(false);
   const [movies, setMovies] = useState<any>([]);
+
+  const successPaymentHandler = (paymentResult: any) => {
+    console.log(paymentResult);
+    // onPayOrder({ orderId: orderId, ...paymentResult });
+  };
+
+  useEffect(() => {
+    if (1) {
+      // setorderDetails(dataFetch);
+
+      const addPayPalScript = async () => {
+
+        const clientId =
+          "AetgEg127o-2z1ix-1gFlUc1xTstejtxpOz5e6o-qahfHA-Mxl7ErUWKOFCYjGZFjpQkKZAUUz2bYGD1";
+        const script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
+        script.async = true;
+        script.onload = () => {
+          setSdkReady(true);
+        };
+        document.body.appendChild(script);
+      };
+      if (!window.paypal) {
+        addPayPalScript();
+      } else {
+        setSdkReady(true);
+      }
+    }
+  }, []);
 
   const getAllMovie = async () => {
     try {
@@ -86,6 +116,18 @@ const Hero = () => {
           );
         })}
       </Carousel>
+      <div className="col-12">
+        {!sdkReady ? (
+          <div className="play-button-icon-container">
+            <div className="play-button-icon">
+              <img src={Icons} alt="Icons" />
+            </div>
+          </div>
+        ) : (
+          <PayPalButton amount={900} onSuccess={successPaymentHandler} />
+        )}
+      </div>
+      ;
     </div>
   );
 };

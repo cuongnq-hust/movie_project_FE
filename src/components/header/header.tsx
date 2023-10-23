@@ -1,15 +1,9 @@
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faVideoSlash } from "@fortawesome/free-solid-svg-icons";
 import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import { NavLink } from "react-router-dom";
 import api from "../api/axiosConfig";
-import Modal from "react-bootstrap/Modal";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { authHeader } from "../../auth";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setUserInfo } from "../../store/storeComponent/auth/authSlice";
 import { URL_BE } from "../../utils/constants";
 import { useNavigate } from "react-router-dom";
@@ -91,7 +85,14 @@ const Header = () => {
       <div className="menu__item clothes__list--show">
         {access_token ? (
           <div className="df">
-            <div className="underline">Hi {user}</div>
+            <div
+              onClick={() => {
+                navigate("/update-profile");
+              }}
+              className="underline"
+            >
+              Hi {user}
+            </div>
             <Button variant="danger" onClick={handleLogout}>
               Đăng xuất
             </Button>

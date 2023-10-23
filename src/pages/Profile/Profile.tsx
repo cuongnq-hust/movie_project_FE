@@ -1,51 +1,61 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import "./Register.scss";
+import { useEffect, useState } from "react";
+import "./Profile.scss";
 import { authHeader } from "../../auth";
 import api from "../../components/api/axiosConfig";
 import Button from "react-bootstrap/Button";
-import { Link, useNavigate } from "react-router-dom";
 import { RE_NUMBER, URL_BE, sizeMax } from "../../utils/constants";
 import { useDispatch } from "react-redux";
 import { openToast } from "../../store/storeComponent/customDialog/toastSlice";
-import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import { formatMoney } from "../../utils/commonFunction";
-const Register = () => {
+import { useSelector } from "react-redux";
+import { getUserInfo } from "../../store/selector/RootSelector";
+const Profile = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const [userName, setUserName] = useState<any>("");
-  const [emailRegister, setEmailRegister] = useState<any>("");
-  const [mobileNumber, setMobileNumber] = useState<any>("");
-  const [passwordRegister, setPasswordRegister] = useState<any>("");
-  const [image, setimage] = useState<any>("");
+  const userInfo = useSelector(getUserInfo);
+
+  const [emailRegister, setEmailRegister] = useState<any>(userInfo?.email);
+  const [userName, setUserName] = useState<any>(userInfo?.user_name);
+  const [mobileNumber, setMobileNumber] = useState<any>(
+    userInfo?.mobile_number
+  );
+  const [image, setimage] = useState<any>(userInfo?.image);
+
+  useEffect(() => {
+    setEmailRegister(userInfo?.email);
+    setUserName(userInfo?.user_name);
+    setMobileNumber(userInfo?.mobile_number);
+    setimage(userInfo?.image);
+  }, [userInfo]);
 
   const handleRegister = async () => {
-    if (userName && emailRegister && mobileNumber && passwordRegister && image)
+    if (userName && mobileNumber && image)
       try {
-        const response = await api.post(`${URL_BE}/auth/register`, {
-          user_name: userName.trim(),
-          email: emailRegister.trim(),
-          mobile_number: Number(mobileNumber),
-          password: passwordRegister.trim(),
-          image: image,
-        });
-        if (response.data.statusCodeValue === 200) {
+        const response = await api.post(
+          `${URL_BE}/auth/update`,
+          {
+            user_name: userName.trim(),
+            mobile_number: Number(mobileNumber),
+            image: image,
+          },
+          {
+            headers: authHeader(),
+          }
+        );
+        if (response?.status === 200) {
           dispatch(
             openToast({
               isOpen: Date.now(),
-              content: "Register Success !",
+              content: "Update Profile Has Been Success !",
               step: 1,
             })
           );
-          navigate("/login");
         } else {
           dispatch(
             openToast({
               isOpen: Date.now(),
-              content: "Tai Khoan Da Ton Tai",
+              content: "Update Profile Has Been Failed !",
               step: 2,
             })
           );
@@ -91,34 +101,24 @@ const Register = () => {
 
           <InputGroup className="mt20px">
             <Form.Control
-              aria-label="With textarea"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-              placeholder="Enter your user..."
-              onKeyDown={(event) => {
-                if (event.code === "Enter") {
-                }
-              }}
-            />
-          </InputGroup>
-          <InputGroup className="mt20px">
-            <Form.Control
-              aria-label="With textarea"
-              value={passwordRegister}
-              onChange={(e) => setPasswordRegister(e.target.value)}
-              placeholder="Enter your password..."
-              onKeyDown={(event) => {
-                if (event.code === "Enter") {
-                }
-              }}
-            />
-          </InputGroup>
-          <InputGroup className="mt20px">
-            <Form.Control
+              readOnly
               aria-label="With textarea"
               value={emailRegister}
               onChange={(e) => setEmailRegister(e.target.value)}
               placeholder="Enter your Email..."
+              onKeyDown={(event) => {
+                if (event.code === "Enter") {
+                }
+              }}
+            />
+          </InputGroup>
+
+          <InputGroup className="mt20px">
+            <Form.Control
+              aria-label="With textarea"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              placeholder="Enter your user..."
               onKeyDown={(event) => {
                 if (event.code === "Enter") {
                 }
@@ -167,16 +167,11 @@ const Register = () => {
           )}
           <div className="df">
             <Button
-              className="mt20px"
               variant="warning"
-              onClick={() => {
-                navigate("/login");
-              }}
+              className="mt20px"
+              onClick={handleRegister}
             >
-              Login
-            </Button>
-            <Button className="mt20px" onClick={handleRegister}>
-              Register
+              Update Profile
             </Button>
           </div>
         </div>
@@ -185,4 +180,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Profile;

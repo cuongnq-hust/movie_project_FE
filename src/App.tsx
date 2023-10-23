@@ -15,6 +15,7 @@ import Cart from "./pages/Cart/Cart";
 import { useEffect } from "react";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
+import Profile from "./pages/Profile/Profile";
 
 function App() {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ function App() {
         <Route path="/category-create" element={<CategoryCreate />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/update-profile" element={<Profile />} />
         <Route path="/movie-list" element={<MovieList />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/review-detail" element={<ReviewDetail />} />
