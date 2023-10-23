@@ -17,9 +17,11 @@ const MovieList = () => {
 
   const [cartId, setcartId] = useState<any>("");
   const [movies, setMovies] = useState<any>([]);
+  const [moviesOr, setMoviesOr] = useState<any>([]);
   const [categories, setCategories] = useState<any>([]);
   const [title, settitle] = useState<any>("");
   const [trailerLink, settrailerLink] = useState<any>("");
+  const [valueSearch, setvalueSearch] = useState<any>("");
   const [poster, setposter] = useState<any>("");
   const [avatar, setavatar] = useState<any>("");
   const [cateId, setCateId] = useState<any>("");
@@ -32,6 +34,31 @@ const MovieList = () => {
     settrailerLink("");
     settitle("");
   };
+  const searchMovieAll = async () => {
+    try {
+      if (valueSearch) {
+        const response = await api.get(
+          `${URL_BE}/movie/findByName/${valueSearch}`,
+          {
+            headers: authHeader(),
+          }
+        );
+        if (response?.data) {
+          if (response?.data) {
+            let Movies_temp: any = response?.data ?? [];
+            Movies_temp.sort((a: any, b: any) =>
+              a.create_At > b.create_At ? -1 : b.create_At > a.create_At ? 1 : 0
+            );
+            setMovies(Movies_temp);
+          }
+        }
+      } else {
+        setMovies(moviesOr);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const getMovieAll = async () => {
     try {
       const response = await api.get(`${URL_BE}/movie/all`, {
@@ -43,6 +70,7 @@ const MovieList = () => {
           a.create_At > b.create_At ? -1 : b.create_At > a.create_At ? 1 : 0
         );
         setMovies(Movies_temp);
+        setMoviesOr(Movies_temp);
       }
     } catch (err) {
       console.log(err);
@@ -249,6 +277,25 @@ const MovieList = () => {
         })}
       </div>
       <div className="review-list">
+        <div className="review-form">
+          SEARCH
+          <InputGroup className="mb-3">
+            <Form.Control
+              value={valueSearch}
+              onChange={(e) => setvalueSearch(e.target.value)}
+              placeholder="Enter search value..."
+              aria-label="Recipient's username"
+              aria-describedby="basic-addon2"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  searchMovieAll();
+                }
+              }}
+            />
+          </InputGroup>
+          <Button onClick={searchMovieAll}>SEARCH MOVIE</Button>
+        </div>
+
         <div className="review-form">
           <Form.Group controlId="formBasicSelect">
             <Form.Label>Select Category Type</Form.Label>

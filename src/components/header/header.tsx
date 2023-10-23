@@ -1,15 +1,9 @@
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faVideoSlash } from "@fortawesome/free-solid-svg-icons";
 import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import { NavLink } from "react-router-dom";
 import api from "../api/axiosConfig";
-import Modal from "react-bootstrap/Modal";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { authHeader } from "../../auth";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setUserInfo } from "../../store/storeComponent/auth/authSlice";
 import { URL_BE } from "../../utils/constants";
 import { useNavigate } from "react-router-dom";
