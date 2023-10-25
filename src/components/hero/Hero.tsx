@@ -11,38 +11,7 @@ import Icons from "./../../asset/circle.svg";
 import { PayPalButton } from "react-paypal-button-v2";
 
 const Hero = () => {
-  const [sdkReady, setSdkReady] = useState<any>(false);
   const [movies, setMovies] = useState<any>([]);
-
-  const successPaymentHandler = (paymentResult: any) => {
-    console.log(paymentResult);
-    // onPayOrder({ orderId: orderId, ...paymentResult });
-  };
-
-  useEffect(() => {
-    if (1) {
-      // setorderDetails(dataFetch);
-
-      const addPayPalScript = async () => {
-
-        const clientId =
-          "AetgEg127o-2z1ix-1gFlUc1xTstejtxpOz5e6o-qahfHA-Mxl7ErUWKOFCYjGZFjpQkKZAUUz2bYGD1";
-        const script = document.createElement("script");
-        script.type = "text/javascript";
-        script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
-        script.async = true;
-        script.onload = () => {
-          setSdkReady(true);
-        };
-        document.body.appendChild(script);
-      };
-      if (!window.paypal) {
-        addPayPalScript();
-      } else {
-        setSdkReady(true);
-      }
-    }
-  }, []);
 
   const getAllMovie = async () => {
     try {
@@ -116,6 +85,7 @@ const Hero = () => {
           );
         })}
       </Carousel>
+      {/* 
       <div className="col-12">
         {!sdkReady ? (
           <div className="play-button-icon-container">
@@ -126,7 +96,7 @@ const Hero = () => {
         ) : (
           <PayPalButton amount={900} onSuccess={successPaymentHandler} />
         )}
-      </div>
+      </div> */}
       ;
     </div>
   );
