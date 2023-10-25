@@ -7,20 +7,16 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import { useSelector } from "react-redux";
 import { getUserInfo } from "../../store/selector/RootSelector";
-import { URL_BE } from "../../utils/constants";
+import { RE_NUMBER, URL_BE } from "../../utils/constants";
 import { useDispatch } from "react-redux";
 import { openToast } from "../../store/storeComponent/customDialog/toastSlice";
-import Modal from "react-bootstrap/Modal";
+import { formatMoney } from "../../utils/commonFunction";
+import InputGroup from "react-bootstrap/InputGroup";
+import Form from "react-bootstrap/Form";
 
 const Cart = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
+  const [cartItems, setcartItems] = useState<any>([]);
   const [cartId, setcartId] = useState<any>("");
-  const userInfo = useSelector(getUserInfo);
-
-  const [comments, setComments] = useState<any>([]);
-  const [reviewItem, setreviewItem] = useState<any>({});
 
   const getCartNow = async () => {
     try {
@@ -34,169 +30,111 @@ const Cart = () => {
       console.log(err);
     }
   };
+  const getListCartItem = async (cartId: any) => {
+    try {
+      const response = await api.get(`${URL_BE}/cart/listCartItem/${cartId}`, {
+        headers: authHeader(),
+      });
+      if (response?.data) {
+        setcartItems(response?.data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
     getCartNow();
   }, []);
+  useEffect(() => {
+    if (cartId) getListCartItem(cartId);
+  }, [cartId]);
 
-  const [showUpdateReview, setshowUpdateReview] = useState<any>(false);
-  const [newReview, setnewReview] = useState<any>(reviewItem?.body);
-  const updateReview = async (id: any) => {
+  const createOrder = async () => {
     try {
       const response = await api.post(
-        `${URL_BE}/review/update/${id}`,
-        newReview.trim(),
+        `${URL_BE}/cart/createOrder`,
+        {},
         {
-          headers: {
-            "Content-Type": "text/plain",
-            ...authHeader(),
-          },
+          headers: authHeader(),
         }
       );
-      if (response?.status === 201) {
-        setshowUpdateReview(false);
-        dispatch(
-          openToast({
-            isOpen: Date.now(),
-            content: "A Review Has been Updated !",
-            step: 1,
-          })
-        );
+      if (response?.data) {
+        console.log(response);
+        // setcartItems(response?.data);
       }
     } catch (err) {
       console.log(err);
-      dispatch(
-        openToast({
-          isOpen: Date.now(),
-          content: "A Comment Has been Failed !",
-          step: 2,
-        })
-      );
-    }
-  };
-
-  const deleteReview = async (id: any) => {
-    try {
-      const response = await api.post(`${URL_BE}/review/delete/${id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      });
-      if (response?.status === 200) {
-        setshowUpdateReview(false);
-        navigate(-1);
-        dispatch(
-          openToast({
-            isOpen: Date.now(),
-            content: "A Review Has been Deleted !",
-            step: 1,
-          })
-        );
-      }
-    } catch (err) {
-      console.log(err);
-      dispatch(
-        openToast({
-          isOpen: Date.now(),
-          content: "A Comment Has been Failed !",
-          step: 2,
-        })
-      );
     }
   };
 
   return (
     <div className="layout">
-      <p className="Hero__NewItem__newItemTitle">{reviewItem?.body}</p>
       <div className="Hero__NewItem__commentList">
-        {comments.map((commentItem: any, index: number) => {
+        {cartItems.map((itemCart: any, index: number) => {
           return (
-            <CommentDetail
-              key={index}
-              commentItem={commentItem}
-            ></CommentDetail>
+            <ItemCartDetail key={index} itemCart={itemCart}></ItemCartDetail>
           );
         })}
       </div>
 
       <div className="comment_form">
-        <Button onClick={() => {}}>Check to Order</Button>
+        <Button onClick={createOrder}>Check to Order</Button>
       </div>
-      {userInfo?.email === reviewItem?.user?.user_id ? (
-        <div className="actions">
-          <Button
-            variant="warning"
-            onClick={() => {
-              setshowUpdateReview(!showUpdateReview);
-            }}
-          >
-            Update Review
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => {
-              deleteReview(reviewItem?.id);
-            }}
-            type="submit"
-          >
-            Delete Review
-          </Button>
-        </div>
-      ) : null}
     </div>
   );
 };
 
-const CommentDetail = ({ commentItem, getCommentByReview }: any) => {
+const ItemCartDetail = ({ itemCart, getCommentByReview }: any) => {
   const dispatch = useDispatch();
-  const [showUpdateCom, setshowUpdateCom] = useState<any>(false);
-  const [newCom, setnewCom] = useState<any>(commentItem?.body);
-
-  const deleteComment = async (id: any) => {
+  const [movie, setMovie] = useState<any>({});
+  const [quantity, setquantity] = useState<any>(itemCart?.quantity);
+  useEffect(() => {
+    getMovieById();
+  }, []);
+  const getMovieById = async () => {
     try {
-      const response = await api.post(`${URL_BE}/comment/delete/${id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
+      const response = await api.get(`${URL_BE}/movie/${itemCart?.movieId}`, {
+        headers: authHeader(),
       });
-      if (response?.status === 200) {
-        getCommentByReview();
+      if (response?.data) setMovie(response?.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const onAddToCart = async (id: any) => {
+    try {
+      const response = await api.post(
+        `${URL_BE}/cart/new`,
+        {
+          movieId: id,
+          quantity: Number(quantity),
+        },
+        {
+          headers: authHeader(),
+        }
+      );
+      if (response?.data) {
         dispatch(
           openToast({
             isOpen: Date.now(),
-            content: "A Comment Has been Deleted !",
+            content: "A movie Has been change quantity to card Success !",
             step: 1,
           })
         );
       }
     } catch (err) {
       console.log(err);
-      dispatch(
-        openToast({
-          isOpen: Date.now(),
-          content: "A Comment Has been Failed !",
-          step: 2,
-        })
-      );
     }
   };
-
-  const updateComment = async (id: any) => {
+  const removeItemCart = async (id: any) => {
     try {
-      const response = await api.post(
-        `${URL_BE}/comment/update/${id}`,
-        newCom.trim(),
-        {
-          headers: {
-            "Content-Type": "text/plain",
-            ...authHeader(),
-          },
-        }
-      );
+      const response = await api.post(`${URL_BE}/cart/deleteItem/${id}`, id, {
+        headers: {
+          "Content-Type": "text/plain",
+          ...authHeader(),
+        },
+      });
       if (response?.status === 201) {
-        getCommentByReview();
-        setshowUpdateCom(false);
         dispatch(
           openToast({
             isOpen: Date.now(),
@@ -217,71 +155,58 @@ const CommentDetail = ({ commentItem, getCommentByReview }: any) => {
     }
   };
   return (
-    <div className="Hero__NewItem__commentItem ml40px">
-      <Modal
-        show={showUpdateCom}
-        onHide={() => {
-          setshowUpdateCom(false);
-        }}
-      >
-        <Modal.Body>
-          <div>
-            <div>
-              <label>Review: </label>
-              <div>{commentItem?.review?.body}</div>
+    <div className="Hero__NewItem__itemCart ml40px">
+      {movie && (
+        <div className="movie-details">
+          <div className="movie__title">name: {movie?.title}</div>
+          <div className="df mt10px">
+            <div className="movie__title">
+              price: {formatMoney(movie?.price)} $
             </div>
-            <div>
-              <label>New Comment:</label>
-
-              <div>
-                <textarea
-                  autoFocus
-                  rows={4}
-                  value={newCom}
+            <div className="df">
+              <InputGroup className="mb-3">
+                <Form.Control
+                  maxLength={2}
+                  value={quantity}
                   onChange={(e) => {
-                    setnewCom(e.target.value);
-                  }}
-                  placeholder="Enter your comment..."
-                  onKeyDown={(event) => {
-                    if (event.code === "Enter") {
-                      updateComment(commentItem?.id);
+                    let amount = e.target.value;
+                    if (!amount || amount.match(RE_NUMBER)) {
+                      setquantity(amount);
                     }
                   }}
-                ></textarea>
+                  placeholder="Enter quantity..."
+                  aria-label="Recipient's username"
+                  aria-describedby="basic-addon2"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                    }
+                  }}
+                />
+              </InputGroup>
+
+              <div className="actions">
+                <Button
+                  variant="dark"
+                  onClick={() => {
+                    onAddToCart(movie?.id);
+                  }}
+                >
+                  CHANGE QUANTITY
+                </Button>
+                <Button
+                  variant="danger"
+                  onClick={() => {
+                    removeItemCart(movie?.id);
+                  }}
+                  type="submit"
+                >
+                  REMOVE ITEM
+                </Button>
               </div>
             </div>
-            <Button
-              onClick={() => {
-                updateComment(commentItem?.id);
-              }}
-              variant="warning"
-              type="submit"
-            >
-              Update
-            </Button>
           </div>
-        </Modal.Body>
-      </Modal>
-      <div className="title">{commentItem?.body}</div>
-      <div className="actions">
-        <Button
-          variant="warning"
-          onClick={() => {
-            setshowUpdateCom(!showUpdateCom);
-          }}
-        >
-          Update Comment
-        </Button>
-        <Button
-          variant="danger"
-          onClick={() => {
-            deleteComment(commentItem?.id);
-          }}
-          type="submit"
-        >
-          Delete Comment
-        </Button>
-      </div>
+        </div>
+      )}
     </div>
   );
 };

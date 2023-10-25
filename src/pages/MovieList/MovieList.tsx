@@ -337,6 +337,7 @@ const MovieItem = ({ mov }: any) => {
   const navigate = useNavigate();
   const [quantity, setquantity] = useState<any>(1);
   const [cartId, setcartId] = useState<any>("");
+  const dispatch = useDispatch();
 
   const getCartNow = async (id: any) => {
     try {
@@ -366,6 +367,13 @@ const MovieItem = ({ mov }: any) => {
       );
       if (response?.data) {
         setcartId(response?.data?.id);
+        dispatch(
+          openToast({
+            isOpen: Date.now(),
+            content: "A movie Has been add to card Success !",
+            step: 1,
+          })
+        );
       }
     } catch (err) {
       console.log(err);
@@ -397,8 +405,14 @@ const MovieItem = ({ mov }: any) => {
         <div className="df">
           <InputGroup className="mb-3">
             <Form.Control
+              maxLength={2}
               value={quantity}
-              onChange={(e) => setquantity(e.target.value)}
+              onChange={(e) => {
+                let amount = e.target.value;
+                if (!amount || amount.match(RE_NUMBER)) {
+                  setquantity(amount);
+                }
+              }}
               placeholder="Enter quantity..."
               aria-label="Recipient's username"
               aria-describedby="basic-addon2"
