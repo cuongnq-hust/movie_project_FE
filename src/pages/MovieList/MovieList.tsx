@@ -15,7 +15,6 @@ import { formatMoney } from "../../utils/commonFunction";
 const MovieList = () => {
   const dispatch = useDispatch();
 
-  const [cartId, setcartId] = useState<any>("");
   const [movies, setMovies] = useState<any>([]);
   const [moviesOr, setMoviesOr] = useState<any>([]);
   const [categories, setCategories] = useState<any>([]);
@@ -71,38 +70,6 @@ const MovieList = () => {
         );
         setMovies(Movies_temp);
         setMoviesOr(Movies_temp);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const getCartNow = async (id: any) => {
-    try {
-      const response = await api.get(`${URL_BE}/cart/cartNow`, {
-        headers: authHeader(),
-      });
-      if (response?.data) {
-        setcartId(response?.data?.id);
-        onAddToCart(id);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const onAddToCart = async (id: any) => {
-    try {
-      const response = await api.post(
-        `${URL_BE}/cart/new`,
-        {
-          movieId: id,
-          quantity: 4,
-        },
-        {
-          headers: authHeader(),
-        }
-      );
-      if (response?.data) {
-        setcartId(response?.data?.id);
       }
     } catch (err) {
       console.log(err);
@@ -173,7 +140,6 @@ const MovieList = () => {
       alert("Ban can Dang nhap de them binh luan");
     }
   };
-  const navigate = useNavigate();
 
   const uploadImage = async (e: any) => {
     const file = e.target.files[0];
@@ -234,46 +200,7 @@ const MovieList = () => {
     <div className="grid-container">
       <div className="movie-details">
         {movies.map((mov: any, index: any) => {
-          return (
-            <div key={index}>
-              <div
-                className="movie__title underline"
-                onClick={() => {
-                  navigate(`/category-list?id=${mov?.categoryMovie?.id}`);
-                }}
-              >
-                category: {mov?.categoryMovie?.title}
-              </div>
-              <div className="df">
-                <div className="movie__title">name: {mov?.title}</div>
-                <Button
-                  onClick={() => {
-                    navigate(`/movie/${mov?.id}`);
-                  }}
-                >
-                  Detail
-                </Button>
-              </div>
-              <div className="df mt10px">
-                <div className="movie__title">
-                  price: {formatMoney(mov?.price)} đ
-                </div>
-                <Button
-                  variant="dark"
-                  onClick={() => {
-                    getCartNow(mov?.id);
-                  }}
-                >
-                  BUY
-                </Button>
-              </div>
-              <img
-                className="movie__poster mt10px"
-                src={mov?.poster}
-                alt="poster"
-              />
-            </div>
-          );
+          return <MovieItem mov={mov} key={index}></MovieItem>;
         })}
       </div>
       <div className="review-list">
@@ -406,4 +333,94 @@ const MovieList = () => {
   );
 };
 
+const MovieItem = ({ mov }: any) => {
+  const navigate = useNavigate();
+  const [quantity, setquantity] = useState<any>(1);
+  const [cartId, setcartId] = useState<any>("");
+
+  const getCartNow = async (id: any) => {
+    try {
+      const response = await api.get(`${URL_BE}/cart/cartNow`, {
+        headers: authHeader(),
+      });
+      if (response?.data) {
+        setcartId(response?.data?.id);
+        onAddToCart(id);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const onAddToCart = async (id: any) => {
+    try {
+      const response = await api.post(
+        `${URL_BE}/cart/new`,
+        {
+          movieId: id,
+          quantity: Number(quantity),
+        },
+        {
+          headers: authHeader(),
+        }
+      );
+      if (response?.data) {
+        setcartId(response?.data?.id);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return (
+    <div>
+      <div
+        className="movie__title underline"
+        onClick={() => {
+          navigate(`/category-list?id=${mov?.categoryMovie?.id}`);
+        }}
+      >
+        category: {mov?.categoryMovie?.title}
+      </div>
+      <div className="df">
+        <div className="movie__title">name: {mov?.title}</div>
+        <Button
+          onClick={() => {
+            navigate(`/movie/${mov?.id}`);
+          }}
+        >
+          Detail
+        </Button>
+      </div>
+      <div className="df mt10px">
+        <div className="movie__title">price: {formatMoney(mov?.price)} $</div>
+        <div className="df">
+          <InputGroup className="mb-3">
+            <Form.Control
+              value={quantity}
+              onChange={(e) => setquantity(e.target.value)}
+              placeholder="Enter quantity..."
+              aria-label="Recipient's username"
+              aria-describedby="basic-addon2"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                }
+              }}
+            />
+          </InputGroup>
+
+          <Button
+            variant="dark"
+            onClick={() => {
+              getCartNow(mov?.id);
+            }}
+          >
+            BUY
+          </Button>
+        </div>
+      </div>
+      <img className="movie__poster mt10px" src={mov?.poster} alt="poster" />
+    </div>
+  );
+};
 export default MovieList;
