@@ -266,7 +266,7 @@ const MovieList = () => {
             </div>
             {avatar && (
               <img
-                className=" mt30px movie__poster"
+                className=" mt30px movie__avatar"
                 src={avatar}
                 alt="poster"
               />

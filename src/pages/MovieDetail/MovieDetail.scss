@@ -87,10 +87,21 @@
     0 0 80px orangered;
 }
 .movie__poster {
-  width: 670px;
-  height: 400px;
-  min-width: 670px;
-  min-height: 400px;
+  width: 630px;
+  height: 354px;
+  min-width: 630px;
+  min-height: 354px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center center;
+  object-fit: cover;
+}
+.movie__avatar {
+  width: 500px;
+  height: 750px;
+  min-width: 500px;
+  min-height: 750px;
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
