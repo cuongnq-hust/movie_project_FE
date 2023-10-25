@@ -5,12 +5,15 @@ import { authHeader } from "../../auth";
 import api from "../../components/api/axiosConfig";
 import Button from "react-bootstrap/Button";
 import { Link, useNavigate } from "react-router-dom";
-import { URL_BE } from "../../utils/constants";
+import { ROLE_ADMIN, URL_BE } from "../../utils/constants";
 import { useDispatch } from "react-redux";
 import { openToast } from "../../store/storeComponent/customDialog/toastSlice";
+import { useSelector } from "react-redux";
+import { getUserInfo } from "../../store/selector/RootSelector";
 
 const CategoryList = () => {
-  const dispatch = useDispatch();
+  const userInfo = useSelector(getUserInfo);
+
 
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
@@ -68,14 +71,16 @@ const CategoryList = () => {
   return (
     <div className="grid-container">
       <div className="movie-details">
-        <Button
-          className="mb40px"
-          onClick={() => {
-            navigate("/category-create");
-          }}
-        >
-          Create Category
-        </Button>
+        {userInfo?.role === ROLE_ADMIN && (
+          <Button
+            className="mb40px"
+            onClick={() => {
+              navigate("/category-create");
+            }}
+          >
+            Create Category
+          </Button>
+        )}
 
         {categories.map((cate: any, index: any) => {
           return (

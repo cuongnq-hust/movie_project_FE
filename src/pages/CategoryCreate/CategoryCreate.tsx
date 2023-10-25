@@ -5,10 +5,12 @@ import { authHeader } from "../../auth";
 import api from "../../components/api/axiosConfig";
 import Button from "react-bootstrap/Button";
 import { Link, useNavigate } from "react-router-dom";
-import { URL_BE } from "../../utils/constants";
+import { ROLE_ADMIN, URL_BE } from "../../utils/constants";
 import { useDispatch } from "react-redux";
 import { openToast } from "../../store/storeComponent/customDialog/toastSlice";
 import Modal from "react-bootstrap/Modal";
+import { useSelector } from "react-redux";
+import { getUserInfo } from "../../store/selector/RootSelector";
 
 const CategoryCreate = () => {
   const dispatch = useDispatch();
@@ -71,6 +73,7 @@ const CategoryCreate = () => {
     }
   };
   const navigate = useNavigate();
+  const userInfo = useSelector(getUserInfo);
 
   return (
     <div className="grid-container">
@@ -86,19 +89,21 @@ const CategoryCreate = () => {
         })}
       </div>
       <div className="review-list">
-        <div className="review-form">
-          <textarea
-            value={cate}
-            onChange={(e) => setCate(e.target.value)}
-            placeholder="Enter category..."
-            onKeyDown={(event) => {
-              if (event.code === "Enter") {
-                submitCategory();
-              }
-            }}
-          ></textarea>
-          <Button onClick={submitCategory}>Create Category</Button>
-        </div>
+        {userInfo?.role === ROLE_ADMIN && (
+          <div className="review-form">
+            <textarea
+              value={cate}
+              onChange={(e) => setCate(e.target.value)}
+              placeholder="Enter category..."
+              onKeyDown={(event) => {
+                if (event.code === "Enter") {
+                  submitCategory();
+                }
+              }}
+            ></textarea>
+            <Button onClick={submitCategory}>Create Category</Button>
+          </div>
+        )}
       </div>
     </div>
   );

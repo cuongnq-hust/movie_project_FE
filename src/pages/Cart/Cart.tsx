@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import "./Cart.scss";
 import { authHeader } from "../../auth";
 import api from "../../components/api/axiosConfig";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
-import { useSelector } from "react-redux";
-import { getUserInfo } from "../../store/selector/RootSelector";
 import { RE_NUMBER, URL_BE } from "../../utils/constants";
 import { useDispatch } from "react-redux";
 import { openToast } from "../../store/storeComponent/customDialog/toastSlice";

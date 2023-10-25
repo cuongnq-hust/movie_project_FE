@@ -41,16 +41,30 @@ const Header = () => {
   const navigate = useNavigate();
   const pathname = window.location.pathname;
   const [user, setuser] = useState<any>("");
+  const [role, setrole] = useState<any>("");
 
+  const getUserRole = async () => {
+    try {
+      const response = await api.get(`${URL_BE}/auth/roles`, {
+        headers: authHeader(),
+      });
+      if (response?.data) {
+        setrole(response.data[0]?.name);
+        // dispatch(setUserInfo({ ...response?.data }));
+        // setuser(response?.data?.user_name);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const getUser = async () => {
     try {
       const response = await api.get(`${URL_BE}/auth/user`, {
         headers: authHeader(),
       });
       if (response?.data) {
-        console.log(response?.data);
-        dispatch(setUserInfo({ ...response?.data }));
-        setuser(response?.data?.user_name);
+        // console.log(response?.data);
+        setuser(response?.data);
       }
     } catch (err) {
       console.log(err);
@@ -59,7 +73,12 @@ const Header = () => {
 
   useEffect(() => {
     getUser();
+    getUserRole();
   }, []);
+
+  useEffect(() => {
+    dispatch(setUserInfo({ ...user, role }));
+  }, [role, user]);
 
   const access_token = localStorage.getItem("access_token");
   const handleLogout = () => {
@@ -97,7 +116,7 @@ const Header = () => {
               }}
               className="underline"
             >
-              Hi {user}
+              Hi {user?.user_name}
             </div>
             <Button variant="danger" onClick={handleLogout}>
               Đăng xuất
