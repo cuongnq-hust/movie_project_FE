@@ -14,7 +14,6 @@ const Profile = () => {
   const dispatch = useDispatch();
 
   const userInfo = useSelector(getUserInfo);
-
   const [emailRegister, setEmailRegister] = useState<any>(userInfo?.email);
   const [userName, setUserName] = useState<any>(userInfo?.user_name);
   const [mobileNumber, setMobileNumber] = useState<any>(

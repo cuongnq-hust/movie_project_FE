@@ -5,12 +5,14 @@ import { authHeader } from "../../auth";
 import api from "../../components/api/axiosConfig";
 import Button from "react-bootstrap/Button";
 import { Link, useNavigate } from "react-router-dom";
-import { RE_NUMBER, URL_BE, sizeMax } from "../../utils/constants";
+import { RE_NUMBER, ROLE_ADMIN, URL_BE, sizeMax } from "../../utils/constants";
 import { useDispatch } from "react-redux";
 import { openToast } from "../../store/storeComponent/customDialog/toastSlice";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { formatMoney } from "../../utils/commonFunction";
+import { useSelector } from "react-redux";
+import { getUserInfo } from "../../store/selector/RootSelector";
 
 const MovieList = () => {
   const dispatch = useDispatch();
@@ -195,7 +197,9 @@ const MovieList = () => {
     } else {
     }
   };
+  const userInfo = useSelector(getUserInfo);
 
+  console.log(userInfo?.role === ROLE_ADMIN);
   return (
     <div className="grid-container">
       <div className="movie-details">
@@ -223,111 +227,123 @@ const MovieList = () => {
           <Button onClick={searchMovieAll}>SEARCH MOVIE</Button>
         </div>
 
-        <div className="review-form">
-          <Form.Group controlId="formBasicSelect">
-            <Form.Label>Select Category Type</Form.Label>
-            <Form.Control
-              as="select"
-              value={cateId}
-              onChange={(e) => {
-                setCateId(e.target.value);
-              }}
-            >
-              {categories.map((cate: any, index: any) => {
-                return (
-                  <option key={index} value={cate?.id}>
-                    {cate?.title}
-                  </option>
-                );
-              })}
-            </Form.Control>
-          </Form.Group>
-          <div className=" mt30px">
-            <label className="btn btn-primary " htmlFor="icon-button-file">
-              Upload Avatar
-            </label>
-          </div>
-          <div className="none">
-            <form id="form" encType="multipart/form-data">
-              <input
-                accept="image/jpg, image/png"
-                id="icon-button-file"
-                type="file"
+        {userInfo?.role === ROLE_ADMIN && (
+          <div className="review-form">
+            <Form.Group controlId="formBasicSelect">
+              <Form.Label>Select Category Type</Form.Label>
+              <Form.Control
+                as="select"
+                value={cateId}
                 onChange={(e) => {
-                  uploadImage(e);
+                  setCateId(e.target.value);
+                }}
+              >
+                {categories.map((cate: any, index: any) => {
+                  return (
+                    <option key={index} value={cate?.id}>
+                      {cate?.title}
+                    </option>
+                  );
+                })}
+              </Form.Control>
+            </Form.Group>
+            <div className=" mt30px">
+              <label className="btn btn-primary " htmlFor="icon-button-file">
+                Upload Avatar
+              </label>
+            </div>
+            <div className="none">
+              <form id="form" encType="multipart/form-data">
+                <input
+                  accept="image/jpg, image/png"
+                  id="icon-button-file"
+                  type="file"
+                  onChange={(e) => {
+                    uploadImage(e);
+                  }}
+                />
+              </form>
+            </div>
+            {avatar && (
+              <img
+                className=" mt30px movie__poster"
+                src={avatar}
+                alt="poster"
+              />
+            )}
+
+            <div className=" mt30px">
+              <label className="btn btn-primary " htmlFor="icon-button-file1">
+                Upload Poster
+              </label>
+            </div>
+            <div className="none">
+              <form id="form" encType="multipart/form-data">
+                <input
+                  accept="image/jpg, image/png"
+                  id="icon-button-file1"
+                  type="file"
+                  onChange={(e) => {
+                    uploadImage1(e);
+                  }}
+                />
+              </form>
+            </div>
+            {poster && (
+              <img
+                className=" mt30px movie__poster"
+                src={poster}
+                alt="poster"
+              />
+            )}
+          </div>
+        )}
+        {userInfo?.role === ROLE_ADMIN && (
+          <div className="review-form">
+            <InputGroup className="mb-3">
+              <Form.Control
+                value={trailerLink}
+                onChange={(e) => settrailerLink(e.target.value)}
+                placeholder="Enter your trailerLink..."
+                aria-label="Recipient's username"
+                aria-describedby="basic-addon2"
+              />
+            </InputGroup>
+
+            <InputGroup>
+              <Form.Control
+                as="textarea"
+                aria-label="With textarea"
+                value={title}
+                onChange={(e) => settitle(e.target.value)}
+                placeholder="Enter your title..."
+                onKeyDown={(event) => {
+                  if (event.code === "Enter") {
+                  }
                 }}
               />
-            </form>
-          </div>
-          {avatar && (
-            <img className=" mt30px movie__poster" src={avatar} alt="poster" />
-          )}
-
-          <div className=" mt30px">
-            <label className="btn btn-primary " htmlFor="icon-button-file1">
-              Upload Poster
-            </label>
-          </div>
-          <div className="none">
-            <form id="form" encType="multipart/form-data">
-              <input
-                accept="image/jpg, image/png"
-                id="icon-button-file1"
-                type="file"
+            </InputGroup>
+            <InputGroup className="mb-3">
+              <Form.Control
+                maxLength={10}
+                value={formatMoney(price)}
                 onChange={(e) => {
-                  uploadImage1(e);
+                  let amount = e.target.value;
+                  amount = amount.replaceAll(",", "");
+
+                  if (!amount || amount.match(RE_NUMBER)) {
+                    setprice(amount);
+                  }
                 }}
+                placeholder="Enter your price..."
+                aria-label="Recipient's username"
+                aria-describedby="basic-addon2"
               />
-            </form>
+            </InputGroup>
+
+            <Button onClick={onCreateMovie}>Create Movie</Button>
           </div>
-          {poster && (
-            <img className=" mt30px movie__poster" src={poster} alt="poster" />
-          )}
-        </div>
-        <div className="review-form">
-          <InputGroup className="mb-3">
-            <Form.Control
-              value={trailerLink}
-              onChange={(e) => settrailerLink(e.target.value)}
-              placeholder="Enter your trailerLink..."
-              aria-label="Recipient's username"
-              aria-describedby="basic-addon2"
-            />
-          </InputGroup>
-
-          <InputGroup>
-            <Form.Control
-              as="textarea"
-              aria-label="With textarea"
-              value={title}
-              onChange={(e) => settitle(e.target.value)}
-              placeholder="Enter your title..."
-              onKeyDown={(event) => {
-                if (event.code === "Enter") {
-                }
-              }}
-            />
-          </InputGroup>
-          <InputGroup className="mb-3">
-            <Form.Control
-              maxLength={10}
-              value={formatMoney(price)}
-              onChange={(e) => {
-                let amount = e.target.value;
-                amount = amount.replaceAll(",", "");
-
-                if (!amount || amount.match(RE_NUMBER)) {
-                  setprice(amount);
-                }
-              }}
-              placeholder="Enter your price..."
-              aria-label="Recipient's username"
-              aria-describedby="basic-addon2"
-            />
-          </InputGroup>
-
-          <Button onClick={onCreateMovie}>Create Movie</Button>
-        </div>
+        )}
       </div>
     </div>
   );

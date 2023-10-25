@@ -354,8 +354,8 @@ const CommentDetail = ({ commentItem, getCommentByReview, userInfo }: any) => {
       );
     }
   };
-  console.log(commentItem?.user?.email);
-  console.log(userInfo?.email);
+  // console.log(commentItem?.user?.email);
+  // console.log(userInfo?.email);
   return (
     <div className="Hero__NewItem__commentItem ml40px">
       <Modal
