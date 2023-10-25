@@ -212,7 +212,7 @@ const ReviewDetail = () => {
         </Modal.Body>
       </Modal>
       <div className="movie-details">
-        <div className="movie__title underline">
+        <div className="movie__title underline mb20px">
           category: {reviewItem?.movie?.categoryMovie?.title}
         </div>
         <div className="df">

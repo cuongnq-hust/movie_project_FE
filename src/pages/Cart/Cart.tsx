@@ -15,8 +15,12 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Form from "react-bootstrap/Form";
 
 const Cart = () => {
+  const navigate = useNavigate();
+
   const [cartItems, setcartItems] = useState<any>([]);
   const [cartId, setcartId] = useState<any>("");
+  const [cart, setcart] = useState<any>({});
+  const dispatch = useDispatch();
 
   const getCartNow = async () => {
     try {
@@ -25,12 +29,13 @@ const Cart = () => {
       });
       if (response?.data) {
         setcartId(response?.data?.id);
+        setcart(response?.data);
       }
     } catch (err) {
       console.log(err);
     }
   };
-  const getListCartItem = async (cartId: any) => {
+  const getCartById = async (cartId: any) => {
     try {
       const response = await api.get(`${URL_BE}/cart/listCartItem/${cartId}`, {
         headers: authHeader(),
@@ -46,7 +51,7 @@ const Cart = () => {
     getCartNow();
   }, []);
   useEffect(() => {
-    if (cartId) getListCartItem(cartId);
+    if (cartId) getCartById(cartId);
   }, [cartId]);
 
   const createOrder = async () => {
@@ -59,7 +64,16 @@ const Cart = () => {
         }
       );
       if (response?.data) {
-        console.log(response);
+        response?.data?.id;
+        navigate(`/order-detail/${response?.data?.id}`);
+        // getCartNow();
+        dispatch(
+          openToast({
+            isOpen: Date.now(),
+            content: "A Order Has been Created Success !",
+            step: 1,
+          })
+        );
         // setcartItems(response?.data);
       }
     } catch (err) {
@@ -72,19 +86,28 @@ const Cart = () => {
       <div className="Hero__NewItem__commentList">
         {cartItems.map((itemCart: any, index: number) => {
           return (
-            <ItemCartDetail key={index} itemCart={itemCart}></ItemCartDetail>
+            <ItemCartDetail
+              key={index}
+              getCartById={() => {
+                getCartById(cartId);
+              }}
+              itemCart={itemCart}
+            ></ItemCartDetail>
           );
         })}
       </div>
 
       <div className="comment_form">
-        <Button onClick={createOrder}>Check to Order</Button>
+        <div className="df">
+          <Button onClick={createOrder}>Check to Order</Button>
+          <div className="movie__title">{formatMoney(cart?.total ?? 0)} $</div>
+        </div>
       </div>
     </div>
   );
 };
 
-const ItemCartDetail = ({ itemCart, getCommentByReview }: any) => {
+const ItemCartDetail = ({ itemCart, getCartById }: any) => {
   const dispatch = useDispatch();
   const [movie, setMovie] = useState<any>({});
   const [quantity, setquantity] = useState<any>(itemCart?.quantity);
@@ -128,17 +151,19 @@ const ItemCartDetail = ({ itemCart, getCommentByReview }: any) => {
   };
   const removeItemCart = async (id: any) => {
     try {
-      const response = await api.post(`${URL_BE}/cart/deleteItem/${id}`, id, {
-        headers: {
-          "Content-Type": "text/plain",
-          ...authHeader(),
-        },
-      });
-      if (response?.status === 201) {
+      const response = await api.post(
+        `${URL_BE}/cart/deleteItem/${id}`,
+        { id },
+        {
+          headers: authHeader(),
+        }
+      );
+      if (response?.data) {
+        getCartById();
         dispatch(
           openToast({
             isOpen: Date.now(),
-            content: "A Comment Has been Updated !",
+            content: "A movie Has been remove from card Success !",
             step: 1,
           })
         );
@@ -202,6 +227,9 @@ const ItemCartDetail = ({ itemCart, getCommentByReview }: any) => {
                 >
                   REMOVE ITEM
                 </Button>
+                <div className="movie__title">
+                  {formatMoney(quantity * movie?.price)} $
+                </div>
               </div>
             </div>
           </div>

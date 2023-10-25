@@ -29,6 +29,11 @@ const arr = [
     navigate: "/cart",
     label: "cart",
   },
+  {
+    id: 5,
+    navigate: "/order-list",
+    label: "order",
+  },
 ];
 
 const Header = () => {
@@ -43,6 +48,7 @@ const Header = () => {
         headers: authHeader(),
       });
       if (response?.data) {
+        console.log(response?.data);
         dispatch(setUserInfo({ ...response?.data }));
         setuser(response?.data?.user_name);
       }

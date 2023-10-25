@@ -383,7 +383,7 @@ const MovieItem = ({ mov }: any) => {
   return (
     <div>
       <div
-        className="movie__title underline"
+        className="movie__title underline mb20px"
         onClick={() => {
           navigate(`/category-list?id=${mov?.categoryMovie?.id}`);
         }}
@@ -422,7 +422,6 @@ const MovieItem = ({ mov }: any) => {
               }}
             />
           </InputGroup>
-
           <Button
             variant="dark"
             onClick={() => {

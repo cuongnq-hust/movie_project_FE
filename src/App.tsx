@@ -16,6 +16,8 @@ import { useEffect } from "react";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Profile from "./pages/Profile/Profile";
+import OrderList from "./pages/OrderList/OrderList";
+import OrderDetail from "./pages/OrderDetail/OrderDetail";
 
 function App() {
   const navigate = useNavigate();
@@ -40,6 +42,8 @@ function App() {
         <Route path="/update-profile" element={<Profile />} />
         <Route path="/movie-list" element={<MovieList />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/order-list" element={<OrderList />} />
+        <Route path="/order-detail/:id" element={<OrderDetail />} />
         <Route path="/review-detail" element={<ReviewDetail />} />
         <Route path="*" element={<NotFound />}></Route>
         {/* </Route> */}
